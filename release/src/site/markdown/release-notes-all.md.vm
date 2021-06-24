@@ -1,0 +1,10 @@
+# Release Notes
+
+## Release Notes
+
+[Release notes voor ${project.version}](docs/${project.version}/release-notes.html)
+
+#foreach ($v in $versions.split(","))
+[Release notes voor release $v](docs/$v/release-notes.html)
+
+#end

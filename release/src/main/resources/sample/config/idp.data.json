@@ -1,0 +1,11 @@
+[
+  {
+    "entityId": "xxx",
+    "idpUrlList": [
+      "https://*.vm.openconext.org"
+    ],
+    "redirectUrlList": [
+      "https://*.vm.openconext.org"
+    ]
+  }
+]
