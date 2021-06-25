@@ -34,7 +34,7 @@ Run OWASP security checks by running
 
 ## Configuration of SSO Notification service
 
-The application uses key value pairs set in the [application.properties](release/src/main/resources/dev/config/application.properties) 
+The application uses key value pairs set in the [application.properties](release/src/main/resources/sample/config/application.properties) 
 file.
 
 Settings for the SSO Notification cookie can be configured with the following parameters.
