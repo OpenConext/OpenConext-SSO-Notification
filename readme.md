@@ -37,6 +37,20 @@ Run OWASP security checks by running
 The application uses key value pairs set in the [application.properties](release/src/main/resources/sample/config/application.properties) 
 file.
 
+Settings for exposing inner workings of the application can be configured with the parameters below. Note that for 
+Production use, either access to /actuator should be restricted or this configuration should be altered:
+
+    # The admin user who can access the management information.
+    spring.security.user.name=admin
+    spring.security.user.password=secret
+    spring.security.user.roles=ACTUATOR
+     
+    # Actuator expose settings
+    management.security.roles=ACTUATOR
+    management.endpoints.web.exposure.include=health,info
+    management.endpoints.health.roles=ACTUATOR
+    management.endpoints.info.roles=ACTUATOR
+
 Settings for the SSO Notification cookie can be configured with the following parameters.
 
     # The domain to set for the notification cookie

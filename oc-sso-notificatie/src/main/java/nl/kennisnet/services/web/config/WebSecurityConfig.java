@@ -39,49 +39,24 @@ import java.util.List;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /**
-     * The properties for the security aspects of the application (containing the user to protect the management
-     * information with.)
-     */
-    private SecurityProperties securityProperties;
-
-    public WebSecurityConfig(SecurityProperties securityProperties) {
-        this.securityProperties = securityProperties;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder builder) throws Exception {
-        // Enable an in memory based authentication for Spring Actuator using the security user application properties.
-        // The application property file contains the password as a BCrypt hashed value, the uid generated
-        // password value for the admin user if not supplied is not supported and won't be logged either.
-        // Since this value cannot be used.
-        SecurityProperties.User user = securityProperties.getUser();
-        List<String> roles = user.getRoles();
-        builder.inMemoryAuthentication().passwordEncoder(passwordEncoder())
-                .withUser(user.getName()).password(user.getPassword())
-                .roles(roles.toArray(new String[roles.size()]));
-    }
+    private static final String ROLE_ACTUATOR = "ACTUATOR";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // This application only contains public pages. The Spring Boot Actuator Endpoints
         // are protected by the config in Spring Boot Actuator Endpoints.
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests()
+                .antMatchers("/actuator/**").hasRole(ROLE_ACTUATOR)
+                .anyRequest().permitAll();
 
         // We have to disable the X-Frame-Options since this SSO Notification service can be invoked within an iframe.
         http.headers().frameOptions().disable();
 
         // Disable all security headers so this service can be invoked within 3rd-party applications.
         http.headers().disable();
+
+        // Use Basic Authentication
+        http.httpBasic();
     }
 
-    /**
-     * A BCryptPasswordEncoder to use as passwordEncoder.
-     *
-     * @return a BCryptPasswordEncoder
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 }

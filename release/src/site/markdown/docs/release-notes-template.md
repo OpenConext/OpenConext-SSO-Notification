@@ -5,9 +5,15 @@
 | Application               | OC SSO Notification Service |
 | Version                   | *CURRENT_VERSION*           |
 | Changes since version     | *LAST_VERSION*              |
-| Release date              | dd-mm-2021 (dd-mm-yyyy)     |
+| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
+<!-- Please note only the stories should be added. -->
+
+|#        | Description                                                   |
+|:------- | :------------------------------------------------------------ |
+|ENT-XXXX |                                                               |
+
 
 ## Configuration changes
