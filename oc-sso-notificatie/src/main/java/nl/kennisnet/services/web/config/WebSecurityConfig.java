@@ -15,18 +15,12 @@
  */
 package nl.kennisnet.services.web.config;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 /**
  * This class configures the Spring Security Settings for our application.
@@ -39,24 +33,28 @@ import java.util.List;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String ROLE_ACTUATOR = "ACTUATOR";
+    @Value("${management.security.roles:#{null}}")
+    private String managementSecurityRoles;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // This application only contains public pages. The Spring Boot Actuator Endpoints
-        // are protected by the config in Spring Boot Actuator Endpoints.
-        http.authorizeRequests()
-                .antMatchers("/actuator/**").hasRole(ROLE_ACTUATOR)
+        // This application only contains public pages. The Spring Boot Actuator Endpoints can be protected by the
+        // config in Spring Boot Actuator Endpoints.
+        if (null != managementSecurityRoles) {
+            http.authorizeRequests()
+                .antMatchers("/actuator/**").hasRole(managementSecurityRoles)
                 .anyRequest().permitAll();
+
+            http.httpBasic();
+        } else {
+            http.authorizeRequests().anyRequest().permitAll();
+        }
 
         // We have to disable the X-Frame-Options since this SSO Notification service can be invoked within an iframe.
         http.headers().frameOptions().disable();
 
         // Disable all security headers so this service can be invoked within 3rd-party applications.
         http.headers().disable();
-
-        // Use Basic Authentication
-        http.httpBasic();
     }
 
 }

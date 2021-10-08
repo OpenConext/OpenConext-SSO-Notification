@@ -18,19 +18,27 @@ package nl.kennisnet.services.web;
 import nl.kennisnet.services.web.model.IdP;
 import nl.kennisnet.services.web.service.IdPProvider;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
-@ExtendWith(SpringExtension.class)
 @RestClientTest(IdPProvider.class)
 @TestPropertySource(properties = "classpath:application.properties")
 class IdPProviderTest {
@@ -38,8 +46,54 @@ class IdPProviderTest {
     @Autowired
     private IdPProvider provider;
 
+    @Autowired
+    private MockRestServiceServer server;
+
+    @Value("classpath:rest_response.json")
+    private Resource resourceFile;
+
+    @Value("${api.endpoint.url}")
+    private String endpointUrl;
+
     @Test
-    void getIdPTest() {
+    public void getIdPTest() throws Exception {
+        String resource = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
+        this.server.expect(requestTo(createUrl())).andRespond(withSuccess(resource, MediaType.APPLICATION_JSON));
+
+        List<IdP> idps = provider.getAllSsoNotifications();
+        IdP idp = idps.get(0);
+        assertNotNull(idp);
+        assertEquals("RefELOSAML-OpenConext", idp.getEntityId());
+        assertNotNull(idp.getIdpUrlList());
+        assertNotNull(idp.getRedirectUrlList());
+        assertEquals(3,  idp.getIdpUrlList().size());
+        assertEquals(4,  idp.getRedirectUrlList().size());
+        assertTrue(idp.getIdpUrlList().contains("https://engine.vm.openconext.org"));
+        assertTrue(idp.getIdpUrlList().contains("referentie.vm.openconext.org"));
+        assertTrue(idp.getIdpUrlList().contains("https://referentie.vm.openconext.org"));
+        assertTrue(idp.getRedirectUrlList().contains("https://engine.vm.openconext.org"));
+        assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm.openconext.org"));
+        assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm2.openconext.org"));
+        assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm3.openconext.org"));
+        this.server.verify();
+    }
+
+    @Test
+    public void invalidApiKeyTest() {
+        this.server.expect(requestTo(createUrl())).andRespond(withUnauthorizedRequest());
+        assertThrows(HttpClientErrorException.Unauthorized.class, () -> provider.getAllSsoNotifications());
+    }
+
+    @Test
+    public void notFoundResponseTest()  {
+        this.server.expect(requestTo(createUrl())).andRespond(withStatus(HttpStatus.NOT_FOUND));
+        assertTrue(provider.getAllSsoNotifications().isEmpty());
+    }
+
+    @Test
+    void getIdPStaticFileTest() {
+        ReflectionTestUtils.setField(provider, "endpointUrl", null);
+
         List<IdP> idps = provider.getAllSsoNotifications();
         IdP idp = idps.get(0);
         assertNotNull(idp);
@@ -54,10 +108,15 @@ class IdPProviderTest {
     }
 
     @Test
-    void getIdpInvalidResourceTest() {
+    void getIdpInvalidResourceStaticFileTest() {
         ReflectionTestUtils.setField(provider, "dataSource", new ClassPathResource("file_does_not_exist"));
         List<IdP> idps = provider.getAllSsoNotifications();
         assertTrue(idps.isEmpty());
+    }
+
+    private URI createUrl() {
+        String ALL_SUFFIX = "/all";
+        return UriComponentsBuilder.fromUriString(endpointUrl + ALL_SUFFIX).build().toUri();
     }
 
 }

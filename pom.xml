@@ -36,6 +36,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <dependency-check-maven.version>6.3.2</dependency-check-maven.version>
+        <guava.version>31.0.1-jre</guava.version>
         <javax.bind>2.3.1</javax.bind>
         <maven.deploy.skip>true</maven.deploy.skip>
         <maven.compiler.version>3.8.1</maven.compiler.version>

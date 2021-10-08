@@ -2,3 +2,4 @@
 *.iml
 */target
 oc-sso-notification-eventlog-*.log
+/release/src/main/resources/dev

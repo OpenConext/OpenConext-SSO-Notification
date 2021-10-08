@@ -10,9 +10,10 @@
 
 ## Changes
 
-|#        | Description                                                    |
-|:------- | :------------------------------------------------------------- |
-|ENT-3773 | Spring Boot update Entree Federatie - SSO notification service |
+|#        | Description                                                                          |
+|:------- | :----------------------------------------------------------------------------------- |
+|ENT-3773 | Spring Boot update Entree Federatie - SSO notification service                       |
+|ENT-3785 | Extend public OC SSO notification service to interface with a Data Services instance |
 
 
 ## Configuration changes
@@ -37,3 +38,38 @@ The lines below can be removed from the configuration
 
     spring.security.user.roles[0]=USER
     spring.security.user.roles[1]=ACTUATOR
+
+### ENT-3785 - Extend public OC SSO notification service to interface with a Data Services instance
+
+This version of SSO Notification introduces the ability to interface with an external REST API for retrieving SSO 
+Notification data instead of using a static file. In order to make the application work with such an API, the following
+configuration should be present and populated:
+
+    # API settings
+    # Url of the API which returns the SSO notification information by id.
+    api.endpoint.url=
+    # The name of the API key header
+    api.key.header.key=
+    # The api-key header value - used in security purposes, is added to idp rest request
+    api.key.header.value=
+    # The URL-suffix to fetch all SSO Notification data from the Data Service endpoint
+    api.endpoint.url.all-suffix=
+
+If this configuration is present, the API will be used to fetch the data. The static file will be used as a fallback 
+if the API configuration is not present. In the case the API is not working (either due to wrong configuration or 
+outage), the static file will NOT be used as a fallback.
+
+An example of an API response which is expected by the SSO Notification Service is added in "idp.data.json", and should
+look like:
+
+    [
+        {
+            "entityId": "xxx",
+            "idpUrlList": [
+                "https://*.vm.openconext.org"
+            ],
+            "redirectUrlList": [
+                "https://*.vm.openconext.org"
+            ]
+        }
+    ]

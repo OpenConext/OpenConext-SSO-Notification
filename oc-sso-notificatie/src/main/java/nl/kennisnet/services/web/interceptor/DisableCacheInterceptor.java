@@ -61,7 +61,9 @@ public class DisableCacheInterceptor implements HandlerInterceptor {
      * This implementation is empty.
      */
     @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                                Object o, Exception e) {
+
         // This implementation is empty. This functionality is not required to set specific headers.
     }
 }

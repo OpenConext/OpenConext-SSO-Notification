@@ -34,7 +34,7 @@
         <checkstyle.plugin.version>3.1.0</checkstyle.plugin.version>
         <logback.encoder.version>5.3</logback.encoder.version>
         <lombok.version>1.18.20</lombok.version>
-        <dependency.check.version>6.2.2</dependency.check.version>
+        <dependency.check.version>6.3.2</dependency.check.version>
         <java.version>11</java.version>
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
@@ -106,6 +106,12 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>${javax.bind}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

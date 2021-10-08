@@ -1,0 +1,16 @@
+[
+  {
+    "entityId": "RefELOSAML-OpenConext",
+    "idpUrlList": [
+      "https://engine.vm.openconext.org",
+      "referentie.vm.openconext.org",
+      "https://referentie.vm.openconext.org"
+    ],
+    "redirectUrlList": [
+      "https://engine.vm.openconext.org",
+      "https://referentie.vm.openconext.org",
+      "https://referentie.vm2.openconext.org",
+      "https://referentie.vm3.openconext.org"
+    ]
+  }
+]
