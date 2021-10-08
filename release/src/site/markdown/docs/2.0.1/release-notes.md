@@ -3,9 +3,9 @@
 | Field                     | Value                       |
 |:------------------------- |:--------------------------- | 
 | Application               | OC SSO Notification Service |
-| Version                   | 2.0.1-SNAPSHOT              |
+| Version                   | 2.0.1                       |
 | Changes since version     | 1.0.0                       |
-| Release date              | dd-mm-2021 (dd-mm-yyyy)     |
+| Release date              | 08-10-2021 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
@@ -14,7 +14,7 @@
 |:------- | :----------------------------------------------------------------------------------- |
 |ENT-3773 | Spring Boot update Entree Federatie - SSO notification service                       |
 |ENT-3785 | Extend public OC SSO notification service to interface with a Data Services instance |
-
+|ENT-3802 | Build release OC SSO Notification service 2.0.1                                      |
 
 ## Configuration changes
 
