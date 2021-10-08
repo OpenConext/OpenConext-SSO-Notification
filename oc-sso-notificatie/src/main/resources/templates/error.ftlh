@@ -142,11 +142,11 @@
             }
         }
     </style>
-    <title>Unfortunately an error occurred (${status})</title>
+    <title>An error occurred (${status})</title>
 </head>
 <body>
     <div id="content">
-        <h1>Unfortunately an error occurred (${status})</h1>
+        <h1>An error occurred (${status})</h1>
         <#if message??>
             <p>${message}</p>
         </#if>

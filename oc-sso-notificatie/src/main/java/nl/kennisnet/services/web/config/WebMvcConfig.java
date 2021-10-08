@@ -26,7 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private DisableCacheInterceptor disableCacheInterceptor;
+    private final DisableCacheInterceptor disableCacheInterceptor;
 
     public WebMvcConfig(DisableCacheInterceptor disableCacheInterceptor) {
         this.disableCacheInterceptor = disableCacheInterceptor;

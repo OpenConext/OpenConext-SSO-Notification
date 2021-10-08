@@ -37,6 +37,20 @@ Run OWASP security checks by running
 The application uses key value pairs set in the [application.properties](release/src/main/resources/sample/config/application.properties) 
 file.
 
+Settings for exposing inner workings of the application can be configured with the parameters below. Note that for 
+Production use, either access to /actuator should be restricted or this configuration should be altered:
+
+    # The admin user who can access the management information.
+    spring.security.user.name=admin
+    spring.security.user.password=secret
+    spring.security.user.roles=ACTUATOR
+     
+    # Actuator expose settings
+    management.security.roles=ACTUATOR
+    management.endpoints.web.exposure.include=health,info
+    management.endpoints.health.roles=ACTUATOR
+    management.endpoints.info.roles=ACTUATOR
+
 Settings for the SSO Notification cookie can be configured with the following parameters.
 
     # The domain to set for the notification cookie
@@ -62,6 +76,29 @@ Settings for the encryption can be configured with the following parameters.
 Since AES-256 is used as the default encryption method, note to set a value of 32 characters for `crypto.secure.key` 
 and a value of 16 characters for `crypto.secure.salt`. These settings should also be used in the configuration of 
 Engineblock for the decryption process. Please see section below for more details.
+
+For retrieving SSO Notifications there is the option of requesting data from an external REST API which is configured
+with:
+
+    # Url of the API which returns the SSO notification information by id.
+    api.endpoint.url=
+    # The name of the API key header
+    api.key.header.key=
+    # The api-key header value - used in security purposes, is added to idp rest request
+    api.key.header.value=
+    # The URL-suffix to fetch all SSO Notification data from the Data Service endpoint
+    api.endpoint.url.all-suffix=
+    # The amount of seconds before a timeout
+    connection.timeout.seconds=5
+
+Alternatively, a data file in JSON format (example found [here](release/src/main/resources/sample/config/idp.data.json)) 
+can be configured with:
+
+    data.location=file:release/src/main/resources/sample/config/idp.data.json
+
+If this configuration is present, the API will be used to fetch the data. The static file will be used as a fallback
+if the API configuration is not present. In the case the API is not working (either due to wrong configuration or
+outage), the static file will NOT be used as a fallback.
 
 For a full example of the configurations, please refer to [Installation Manual](release/src/site/markdown/docs/installation-manual.md).
 

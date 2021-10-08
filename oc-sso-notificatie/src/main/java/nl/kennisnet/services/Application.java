@@ -15,8 +15,14 @@
  */
 package nl.kennisnet.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
 
 /**
  * Main Spring Boot application class.
@@ -24,8 +30,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application {
 
+    @Value("${connection.timeout.seconds:5}")
+    private int connectionTimeout;
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .setConnectTimeout(Duration.ofSeconds(connectionTimeout))
+                .setReadTimeout(Duration.ofSeconds(connectionTimeout))
+                .build();
     }
 
 }

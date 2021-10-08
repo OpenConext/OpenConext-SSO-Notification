@@ -80,7 +80,7 @@ class SsoNotificationControllerTest {
     @Mock
     private IdPProvider idPProvider;
 
-    private ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
     @BeforeEach
     void setUp() throws Exception {
