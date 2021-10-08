@@ -39,6 +39,18 @@ The following values need to be changed per environment.
 
 Example application.properties file
 
+    # API settings
+    # Url of the API which returns the SSO notification information by id.
+    api.endpoint.url=
+    # The name of the API key header
+    api.key.header.key=
+    # The api-key header value - used in security purposes, is added to idp rest request
+    api.key.header.value=
+    # The URL-suffix to fetch all SSO Notification data from the Data Service endpoint
+    api.endpoint.url.all-suffix=
+    # The amount of seconds before a timeout
+    connection.timeout.seconds=5
+
     # SSO Notification cookie settings
     # The domain to set for the notification cookie
     notification.cookie.domain=vm.openconext.org
@@ -70,8 +82,13 @@ Example application.properties file
     spring.security.user.name=admin
     # The password should be a bcrypt hash
     spring.security.user.password=<xxx>
-    spring.security.user.roles[0]=USER
-    spring.security.user.roles[1]=ACTUATOR
+    spring.security.user.roles=ACTUATOR
+
+    # Actuator expose settings
+    management.security.roles=ACTUATOR
+    management.endpoints.web.exposure.include=health,info
+    management.endpoints.health.roles=ACTUATOR
+    management.endpoints.info.roles=ACTUATOR
     
     # Logging settings
     
@@ -79,7 +96,7 @@ Example application.properties file
     # for logging properties
     
     # The location to the logback-spring.xml configuration file, for example /conf/logback-spring.xml within Docker.
-    logging.config=/conf/logback-spring.xml
+    logging.config=release/src/main/resources/sample/config/logback-spring.xml
     
     # Additional logging properties which are supported by Spring, as alternative to configure these in the the logback-spring.xml file.
     # see http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-logging.html#boot-features-custom-log-levels

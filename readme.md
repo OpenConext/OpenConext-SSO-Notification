@@ -77,6 +77,29 @@ Since AES-256 is used as the default encryption method, note to set a value of 3
 and a value of 16 characters for `crypto.secure.salt`. These settings should also be used in the configuration of 
 Engineblock for the decryption process. Please see section below for more details.
 
+For retrieving SSO Notifications there is the option of requesting data from an external REST API which is configured
+with:
+
+    # Url of the API which returns the SSO notification information by id.
+    api.endpoint.url=
+    # The name of the API key header
+    api.key.header.key=
+    # The api-key header value - used in security purposes, is added to idp rest request
+    api.key.header.value=
+    # The URL-suffix to fetch all SSO Notification data from the Data Service endpoint
+    api.endpoint.url.all-suffix=
+    # The amount of seconds before a timeout
+    connection.timeout.seconds=5
+
+Alternatively, a data file in JSON format (example found [here](release/src/main/resources/sample/config/idp.data.json)) 
+can be configured with:
+
+    data.location=file:release/src/main/resources/sample/config/idp.data.json
+
+If this configuration is present, the API will be used to fetch the data. The static file will be used as a fallback
+if the API configuration is not present. In the case the API is not working (either due to wrong configuration or
+outage), the static file will NOT be used as a fallback.
+
 For a full example of the configurations, please refer to [Installation Manual](release/src/site/markdown/docs/installation-manual.md).
 
 ## Configuration of Engineblock

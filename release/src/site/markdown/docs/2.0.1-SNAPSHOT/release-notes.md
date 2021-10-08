@@ -73,3 +73,8 @@ look like:
             ]
         }
     ]
+
+Furthermore, a timeout for connecting to the REST API is introduced. The default value is set to 5 seconds and can be 
+configured with:
+
+    connection.timeout.seconds=5
