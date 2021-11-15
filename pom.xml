@@ -176,7 +176,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/tbeekman/OpenConext-SSO-Notification</url>
+            <url>https://maven.pkg.github.com/OpenConext/OpenConext-SSO-Notification</url>
         </repository>
     </distributionManagement>
 
