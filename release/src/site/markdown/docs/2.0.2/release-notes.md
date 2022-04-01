@@ -3,13 +3,12 @@
 | Field                     | Value                       |
 |:------------------------- |:--------------------------- | 
 | Application               | OC SSO Notification Service |
-| Version                   | 2.0.2-SNAPSHOT              |
+| Version                   | 2.0.2                       |
 | Changes since version     | 2.0.1                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 01-04-2022 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
 | #        | Description                                                                                  |
 |:---------|:---------------------------------------------------------------------------------------------|
