@@ -1,0 +1,24 @@
+name: Scheduled Dependency Check Maven
+
+on:
+  schedule:
+    - cron: "0 10 * * 6"
+
+jobs:
+
+  dependency-check-maven:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: maven
+      - name: Execute OWASP dependency check
+        run: mvn clean install -P security-updates -DskipTests=true -B
