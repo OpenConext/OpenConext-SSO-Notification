@@ -11,9 +11,9 @@
 ## Changes
 <!-- Please note only the stories should be added. -->
 
-|#        | Description                                                   |
-|:------- | :------------------------------------------------------------ |
-|ENT-XXXX |                                                               |
+| #        | Description                                                                                  |
+|:---------|:---------------------------------------------------------------------------------------------|
+| ENT-4226 | Update OC SSO notification service in relation to Spring4Shell issue and build release 2.0.2 |
 
 
 ## Configuration changes
