@@ -3,18 +3,16 @@
 | Field                     | Value                       |
 |:------------------------- |:--------------------------- | 
 | Application               | OC SSO Notification Service |
-| Version                   | *CURRENT_VERSION*           |
-| Changes since version     | *LAST_VERSION*              |
+| Version                   | 2.0.3-SNAPSHOT              |
+| Changes since version     | 2.0.2                       |
 | Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-|#        | Description                                                   |
-|:------- | :------------------------------------------------------------ |
-|ENT-XXXX |                                                               |
-
+|#        | Description                             |
+|:------- | :-------------------------------------- |
+|ENT-4420 | Build release OC SSO notification 2.0.3 |
 
 ## Configuration changes
 
