@@ -35,7 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-        <dependency-check-maven.version>7.3.2</dependency-check-maven.version>
+        <dependency-check-maven.version>7.4.0</dependency-check-maven.version>
         <guava.version>31.1-jre</guava.version>
         <javax.bind>2.3.1</javax.bind>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -156,7 +156,7 @@
                         <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <format>ALL</format>
-                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <failBuildOnCVSS>8</failBuildOnCVSS>
                             <suppressionFile>release/src/suppressions/ignore.xml</suppressionFile>
                             <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
                         </configuration>
