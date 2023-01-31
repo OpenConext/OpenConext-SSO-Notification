@@ -25,12 +25,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Interceptor to disable response caching.
- *
+ * <p></p>
  * Based on the protocol different headers are set:
- *
+ * <p></p>
  * For HTTP/1.0 the no-cache value is set for the Pragma header.
  * For HTTP/1.1 the value no-store, no-cache, must-revalidate is set for the Cache-Control header.
- *
+ * <p></p>
  * The Expires header with -1 is always added.
  */
 @Component

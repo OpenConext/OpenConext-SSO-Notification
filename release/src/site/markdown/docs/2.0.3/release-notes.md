@@ -1,7 +1,7 @@
 # OC SSO Notification Service - Release Notes
 
 | Field                     | Value                       |
-|:------------------------- |:--------------------------- | 
+|:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
 | Version                   | 2.0.3                       |
 | Changes since version     | 2.0.2                       |
@@ -10,9 +10,9 @@
 
 ## Changes
 
-|#        | Description                             |
-|:------- | :-------------------------------------- |
-|ENT-4420 | Build release OC SSO notification 2.0.3 |
+| #        | Description                             |
+|:---------|:----------------------------------------|
+| ENT-4420 | Build release OC SSO notification 2.0.3 |
 
 ## Configuration changes
 

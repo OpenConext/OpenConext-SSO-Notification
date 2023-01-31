@@ -1,7 +1,7 @@
 # OC SSO Notification Service - Release Notes
 
 | Field                     | Value                       |
-|:------------------------- |:--------------------------- | 
+|:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
 | Version                   | 2.0.2                       |
 | Changes since version     | 2.0.1                       |

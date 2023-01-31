@@ -218,7 +218,7 @@ public class SsoNotificationController {
 
     /**
      * Verify the retrieved IdP is valid.
-     *
+     * <p></p>
      * The idp is only valid if the idp exists and if urls are configured to white list.
      *
      * @param idp the retrieved idp

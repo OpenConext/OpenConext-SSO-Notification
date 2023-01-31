@@ -80,7 +80,7 @@ public class IdPProvider {
      * Otherwise, the REST request for IdP will be sent.
      * REST request should contain 'api-key' header.
      * Endpoint to which IdP request is send determines from 'idp.provider.url' property.
-     *
+     * <p></p>
      * If a REST request is not configured, we will default to the static file content.
      *
      * @return List of {@link IdP} objects.

@@ -15,7 +15,6 @@
  */
 package nl.kennisnet.services.web.service;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -85,18 +84,15 @@ public class CookiesHandler {
      * and setting other properties using {@link Cookie#setDomain(String)}, {@link Cookie#setVersion(int)},
      * {@link Cookie#setSecure(boolean)} }
      */
-    public Cookie createCookie(String name, String id, URL url)
-            throws UnsupportedEncodingException, JsonProcessingException {
-
+    public Cookie createCookie(String name, String id, URL url) throws JsonProcessingException {
         return createCookie(name, createCookieValue(id, url));
     }
 
-    private String createCookieValue(String id, URL url) throws UnsupportedEncodingException, JsonProcessingException {
+    private String createCookieValue(String id, URL url) throws JsonProcessingException {
         // Create JSON mapping
         ObjectMapper objectMapper = new ObjectMapper();
         return URLEncoder.encode(cryptoManager.encrypt(
-                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString()))),
-                StandardCharsets.UTF_8.name());
+                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString()))), StandardCharsets.UTF_8);
     }
 
     private Cookie createCookie(String name, String value) {

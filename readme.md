@@ -51,6 +51,13 @@ Production use, either access to /actuator should be restricted or this configur
     management.endpoints.health.roles=ACTUATOR
     management.endpoints.info.roles=ACTUATOR
 
+With the default configuration, the /actuator/info endpoint can be requested with the following command:
+
+    curl -X GET http://localhost:8083/actuator/info -H 'Authorization: Basic YWRtaW46c2VjcmV0'
+
+Note that the key "YWRtaW46c2VjcmV0" is a Base64 encoded String with format "[username]:[password]", in this case: 
+"admin:secret". If "management.security.roles" is not set, the actuator endpoint will not be secured.
+
 Settings for the SSO Notification cookie can be configured with the following parameters.
 
     # The domain to set for the notification cookie

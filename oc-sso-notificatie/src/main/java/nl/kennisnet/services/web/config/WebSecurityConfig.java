@@ -16,28 +16,29 @@
 package nl.kennisnet.services.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * This class configures the Spring Security Settings for our application.
- *
+ * <p></p>
  * Please note we added the Order(SecurityProperties.ACCESS_OVERRIDE_ORDER) to not override the actuator access rules,
- * see http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security-actuator.
+ * see <a href="http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-security-actuator">this link</a>.
  */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     @Value("${management.security.roles:#{null}}")
     private String managementSecurityRoles;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // This application only contains public pages. The Spring Boot Actuator Endpoints can be protected by the
         // config in Spring Boot Actuator Endpoints.
         if (null != managementSecurityRoles) {
@@ -55,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // Disable all security headers so this service can be invoked within 3rd-party applications.
         http.headers().disable();
+        return http.build();
     }
 
 }
