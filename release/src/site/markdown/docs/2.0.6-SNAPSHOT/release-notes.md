@@ -11,9 +11,9 @@
 ## Changes
 <!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                                          |
+|:---------|:-----------------------------------------------------|
+| ENT-4545 | Wildcards for sub-sub domains for OC SSO-Notificatie |
 
 
 ## Configuration changes
