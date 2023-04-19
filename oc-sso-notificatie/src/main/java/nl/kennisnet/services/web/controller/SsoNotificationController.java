@@ -16,6 +16,7 @@
 package nl.kennisnet.services.web.controller;
 
 import nl.kennisnet.services.web.config.CacheConfig;
+import nl.kennisnet.services.web.exception.NoMatchFoundException;
 import nl.kennisnet.services.web.model.IdP;
 import nl.kennisnet.services.web.service.CookiesHandler;
 import nl.kennisnet.services.web.service.IdPProvider;
@@ -36,6 +37,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -90,6 +94,9 @@ public class SsoNotificationController {
     /** The name of the TGT cookie */
     @Value("${tgt.cookie.name}")
     private String tgtCookieName;
+
+    @Value("${passthru.endpoint:#{null}}")
+    private String passthruEndpoint;
 
     private final CacheConfig cacheConfig;
 
@@ -154,7 +161,18 @@ public class SsoNotificationController {
         }
 
         IdP idp = ssoNotifications.stream().filter(p -> p.getEntityId().equalsIgnoreCase(id)).findAny().orElse(null);
-        verifyIdP(idp, id, redirectUri);
+        try {
+            verifyIdP(idp, id, redirectUri);
+        } catch (NoMatchFoundException nmfe) {
+            response.sendRedirect(MessageFormat.format(passthruEndpoint, URLEncoder.encode(id, StandardCharsets.UTF_8),
+                    URLEncoder.encode(url, StandardCharsets.UTF_8),
+                    URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)));
+
+            if (null != referrer) {
+                response.setHeader(HttpHeaders.REFERER, referrer);
+            }
+            return;
+        }
         URL createdUrl = determineAndVerifyURL(idp, url, referrer);
 
         // Set notification cookie
@@ -226,8 +244,9 @@ public class SsoNotificationController {
      * @param redirectUri the redirect URL used (OPTIONAL)
      *
      * @throws ResponseStatusException if the idp is invalid.
+     * @throws NoMatchFoundException if the idp was not found and confederational redirects are enabled
      */
-    private void verifyIdP(IdP idp, String id, String redirectUri) {
+    private void verifyIdP(IdP idp, String id, String redirectUri) throws NoMatchFoundException {
         if (null == id) {
             EVENT_LOGGER.warn(EXCEPTION_ID_NOT_PROVIDED);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_NOT_PROVIDED);
@@ -235,11 +254,17 @@ public class SsoNotificationController {
 
         if (null == idp) {
             EVENT_LOGGER.warn("Unknown 'id' parameter found in request: {}", id);
+            if (null != passthruEndpoint) {
+                throw new NoMatchFoundException();
+            }
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, EXCEPTION_UNKNOWN_ID + id);
         }
 
         if (CollectionUtils.isEmpty(idp.getIdpUrlList())) {
             EVENT_LOGGER.warn("No valid URL expression associated with the IdP available for IdP with ID: {}", id);
+            if (null != passthruEndpoint) {
+                throw new NoMatchFoundException();
+            }
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, EXCEPTION_NO_VALID_URL_EXPRESSION_IDP + id);
         }
 

@@ -18,4 +18,20 @@
         <vulnerabilityName>CVE-2022-1471</vulnerabilityName>
     </suppress>
 
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-config-5.7.7.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
+        <vulnerabilityName>CVE-2023-20862</vulnerabilityName>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[
+   file name: spring-security-web-5.7.7.jar
+   ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
+        <vulnerabilityName>CVE-2023-20862</vulnerabilityName>
+    </suppress>
+
 </suppressions>

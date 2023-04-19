@@ -48,6 +48,12 @@ class UrlMatchWildCardsTest {
     }
 
     @Test
+    void matchSecondSubDomainSingleWildcardTest() {
+        Assertions.assertTrue(SsoNotificationController.matchWildcards("http://subsub.subdomain.exampledomain.com",
+                "http://*.exampledomain.com"));
+    }
+
+    @Test
     void matchSecondSubDomainWildcardsFailTest() {
         Assertions.assertFalse(SsoNotificationController.matchWildcards("http://subdomein.exampledomain.com",
                 "http://*.subdomein.exampledomain.com"));
