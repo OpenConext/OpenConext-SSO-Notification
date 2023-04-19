@@ -21,7 +21,7 @@
     <groupId>nl.kennisnet.services</groupId>
     <artifactId>oc-sso-notificatie-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.5</version>
+    <version>2.0.6</version>
     <modules>
         <module>oc-sso-notificatie</module>
         <module>release</module>
@@ -35,7 +35,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-        <dependency-check-maven.version>8.0.2</dependency-check-maven.version>
+        <dependency-check-maven.version>8.2.1</dependency-check-maven.version>
         <guava.version>31.1-jre</guava.version>
         <javax.bind>2.3.1</javax.bind>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -51,7 +51,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.8</version>
+        <version>2.7.10</version>
     </parent>
 
     <build>
@@ -156,7 +156,7 @@
                         <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <format>ALL</format>
-                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <failBuildOnCVSS>8</failBuildOnCVSS>
                             <suppressionFile>release/src/suppressions/ignore.xml</suppressionFile>
                             <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
                         </configuration>
