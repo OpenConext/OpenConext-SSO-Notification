@@ -18,9 +18,9 @@ package nl.kennisnet.services.web.service;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,9 +42,6 @@ public class CookiesHandler {
 
     @Value("${notification.cookie.domain}")
     private String domain;
-
-    @Value("${notification.cookie.version:-1}")
-    private int version;
 
     @Value("${notification.cookie.secured:false}")
     private boolean secured;
@@ -81,7 +78,7 @@ public class CookiesHandler {
      * @param id   IdP identifier create cookie value to.
      * @param url  url create cookie value to.
      * @return new cookie created using given parameters for the content
-     * and setting other properties using {@link Cookie#setDomain(String)}, {@link Cookie#setVersion(int)},
+     * and setting other properties using {@link Cookie#setDomain(String)},
      * {@link Cookie#setSecure(boolean)} }
      */
     public Cookie createCookie(String name, String id, URL url) throws JsonProcessingException {
@@ -102,11 +99,6 @@ public class CookiesHandler {
         if (StringUtils.isNotBlank(domain)) {
             cookie.setDomain(domain);
             LOGGER.debug("Created domain cookie on: {}", domain);
-        }
-
-        if (version != -1) {
-            cookie.setVersion(version);
-            LOGGER.debug("Setting cookie version: {}", version);
         }
 
         cookie.setPath(path);

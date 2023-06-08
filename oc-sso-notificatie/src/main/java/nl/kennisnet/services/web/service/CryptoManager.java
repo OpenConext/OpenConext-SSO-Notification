@@ -83,7 +83,7 @@ public class CryptoManager {
                     .put(enc)
                     .array();
 
-            byte[] b64 = Base64.encodeBase64(cipherText);
+            byte[] b64 = Base64.encodeBase64(cipherText, false);
             return new String(b64, StandardCharsets.UTF_8);
         } catch (Exception ex) {
             LOGGER.error("Encryption error: {} trace: {}", ex.getMessage() , ex);

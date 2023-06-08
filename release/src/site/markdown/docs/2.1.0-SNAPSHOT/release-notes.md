@@ -9,14 +9,17 @@
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
-
+| #        | Description                                             |
+|:---------|:--------------------------------------------------------|
+| ENT-4589 | Update OC SSO notification service to Spring Boot 3.0.7 |
 
 ## Configuration changes
+
+The following configuration is no longer used and can be removed.
+
+    # The version to set for the notification cookie
+    notification.cookie.version=-1
 
 ## Known vulnerabilities
 

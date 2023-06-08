@@ -32,7 +32,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -51,9 +51,6 @@ class CookieHandlerTest {
 
     @Value("${notification.cookie.domain}")
     private String domain;
-
-    @Value("${notification.cookie.version:-1}")
-    private int version;
 
     @Value("${notification.cookie.secured:false}")
     private boolean secured;
@@ -79,18 +76,13 @@ class CookieHandlerTest {
         assertEquals(SsoNotificationController.COOKIE_NOTIFICATION, cookie.getName());
         assertNotEquals(0, cookie.getValue().length());
         assertEquals(domain, cookie.getDomain());
-        if (version == -1) {
-            assertEquals(0, cookie.getVersion());
-        } else {
-            assertEquals(version, cookie.getVersion());
-        }
         assertEquals(path, cookie.getPath());
         assertEquals(secured, cookie.getSecure());
 
         // Check Cookie value
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString =
-                cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.name()));
+                cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
 
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
@@ -100,8 +92,6 @@ class CookieHandlerTest {
     @DirtiesContext
     @Test
     void createCookieNoVersionTest() throws Exception {
-        ReflectionTestUtils.setField(handler, "version", 1);
-
         // Create Cookie
         Cookie cookie = handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId,
                 new URL(testUrl));
@@ -111,18 +101,13 @@ class CookieHandlerTest {
         assertEquals(SsoNotificationController.COOKIE_NOTIFICATION, cookie.getName());
         assertNotEquals(0, cookie.getValue().length());
         assertEquals(domain, cookie.getDomain());
-        if (version == -1) {
-            assertEquals(1, cookie.getVersion());
-        } else {
-            assertEquals(version, cookie.getVersion());
-        }
         assertEquals(path, cookie.getPath());
         assertEquals(secured, cookie.getSecure());
 
         // Check Cookie value
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString =
-                cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.name()));
+                cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
 
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
@@ -143,17 +128,12 @@ class CookieHandlerTest {
         assertEquals(SsoNotificationController.COOKIE_NOTIFICATION, cookie.getName());
         assertNotEquals(0, cookie.getValue().length());
         assertNull(cookie.getDomain());
-        if (version == -1) {
-            assertEquals(0, cookie.getVersion());
-        } else {
-            assertEquals(version, cookie.getVersion());
-        }
         assertEquals(path, cookie.getPath());
         assertEquals(secured, cookie.getSecure());
 
         // Check Cookie value
         ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.name()));
+        String jsonString = cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
         assertEquals(testUrl, cookieValueDTO.getUrl());

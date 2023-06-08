@@ -17,7 +17,7 @@ The following urls are exposed with this service:
 
 The OC SSO Notification Service utilises:
 
-- OpenJDK 11
+- Java 17
 - Maven 3+
 
 ## Installation
@@ -67,8 +67,6 @@ Settings for the SSO Notification cookie can be configured with the following pa
     notification.cookie.domain=vm.openconext.org
     # The path to set for the notification cookie
     notification.cookie.path=/
-    # The version to set for the notification cookie
-    notification.cookie.version=-1
     # The secure flag to set for the notification cookie
     notification.cookie.secured=true
 

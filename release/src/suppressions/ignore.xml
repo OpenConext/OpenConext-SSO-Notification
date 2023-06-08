@@ -2,36 +2,12 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 
     <suppress>
-        <notes><![CDATA[Ignored since we are not vulnerable
-            See: https://github.com/spring-projects/spring-framework/issues/24434#issuecomment-744519525
-        ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring.*$</packageUrl>
-        <cve>CVE-2016-1000027</cve>
-    </suppress>
-
-    <suppress>
         <notes><![CDATA[
         Ignored since we are not vulnerable. See: https://github.com/spring-projects/spring-boot/issues/33457.
    file name: snakeyaml-1.33.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
         <vulnerabilityName>CVE-2022-1471</vulnerabilityName>
-    </suppress>
-
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-config-5.7.7.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-20862</vulnerabilityName>
-    </suppress>
-
-    <suppress>
-        <notes><![CDATA[
-   file name: spring-security-web-5.7.7.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
-        <vulnerabilityName>CVE-2023-20862</vulnerabilityName>
     </suppress>
 
 </suppressions>

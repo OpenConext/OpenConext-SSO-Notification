@@ -18,7 +18,7 @@ package nl.kennisnet.services.web.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,7 +31,7 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     @Value("${management.security.roles:#{null}}")
@@ -42,13 +42,13 @@ public class WebSecurityConfig {
         // This application only contains public pages. The Spring Boot Actuator Endpoints can be protected by the
         // config in Spring Boot Actuator Endpoints.
         if (null != managementSecurityRoles) {
-            http.authorizeRequests()
-                .antMatchers("/actuator/**").hasRole(managementSecurityRoles)
+            http.authorizeHttpRequests()
+                .requestMatchers("/actuator/**").hasRole(managementSecurityRoles)
                 .anyRequest().permitAll();
 
             http.httpBasic();
         } else {
-            http.authorizeRequests().anyRequest().permitAll();
+            http.authorizeHttpRequests().anyRequest().permitAll();
         }
 
         // We have to disable the X-Frame-Options since this SSO Notification service can be invoked within an iframe.

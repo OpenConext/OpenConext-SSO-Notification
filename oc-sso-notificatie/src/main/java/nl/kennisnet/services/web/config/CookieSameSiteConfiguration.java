@@ -15,24 +15,19 @@
  */
 package nl.kennisnet.services.web.config;
 
-import org.apache.tomcat.util.http.LegacyCookieProcessor;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.CookieSameSiteSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuration for Spring Boot to set SameSite property for Cookies to "none"
  */
-@Configuration
-public class TomcatConfiguration {
+@Configuration(proxyBeanMethods = false)
+public class CookieSameSiteConfiguration {
 
     @Bean
-    WebServerFactoryCustomizer<TomcatServletWebServerFactory> cookieProcessorCustomizer() {
-        return factory -> factory.addContextCustomizers(context -> {
-            LegacyCookieProcessor processor = new LegacyCookieProcessor();
-            processor.setSameSiteCookies("none");
-            context.setCookieProcessor(processor);
-        });
+    public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
+        return CookieSameSiteSupplier.ofNone();
     }
+
 }

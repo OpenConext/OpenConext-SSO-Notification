@@ -34,7 +34,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
+        <jacoco.version>0.8.8</jacoco.version>
         <dependency-check-maven.version>8.2.1</dependency-check-maven.version>
         <guava.version>31.1-jre</guava.version>
         <javax.bind>2.3.1</javax.bind>
@@ -44,14 +45,13 @@
         <maven.release.version>2.5.3</maven.release.version>
         <maven.assembly.version>3.1.1</maven.assembly.version>
         <maven.sonar.version>3.7.0.1746</maven.sonar.version>
-        <jacoco.version>0.8.5</jacoco.version>
         <snakeyaml.version>1.33</snakeyaml.version> <!-- Manual override for CVE-2022-25857 -->
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.10</version>
+        <version>3.0.7</version>
     </parent>
 
     <build>

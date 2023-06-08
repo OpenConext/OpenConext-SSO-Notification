@@ -56,8 +56,6 @@ Example application.properties file
     notification.cookie.domain=vm.openconext.org
     # The path to set for the notification cookie
     notification.cookie.path=/
-    # The version to set for the notification cookie
-    notification.cookie.version=-1
     # The secure flag to set for the notification cookie
     notification.cookie.secured=true
     
