@@ -156,7 +156,7 @@
                         <version>${dependency-check-maven.version}</version>
                         <configuration>
                             <format>ALL</format>
-                            <failBuildOnCVSS>8</failBuildOnCVSS>
+                            <failBuildOnCVSS>7</failBuildOnCVSS>
                             <suppressionFile>release/src/suppressions/ignore.xml</suppressionFile>
                             <failBuildOnAnyVulnerability>false</failBuildOnAnyVulnerability>
                         </configuration>
