@@ -3,9 +3,9 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.1.1-SNAPSHOT              |
+| Version                   | 2.1.1                       |
 | Changes since version     | 2.1.0                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 04-07-2023 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
@@ -13,9 +13,11 @@
 | #        | Description                                                  |
 |:---------|:-------------------------------------------------------------|
 | ENT-4730 | Improve handling SSO notification request without parameters |
-
+| ENT-4731 | Build release OC SSO notification 2.1.1                      |
 
 ## Configuration changes
+
+None.
 
 ## Known vulnerabilities
 
