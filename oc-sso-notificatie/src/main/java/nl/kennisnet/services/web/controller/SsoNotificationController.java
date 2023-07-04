@@ -63,6 +63,8 @@ public class SsoNotificationController {
 
     private static final String EXCEPTION_ID_NOT_PROVIDED = "Required String parameter 'id' is not present";
 
+    private static final String EXCEPTION_ID_EMPTY = "Required String parameter 'id' is empty";
+
     private static final String EXCEPTION_NO_VALID_URL_EXPRESSION_IDP =
             "No valid URL expression associated with the IdP available for IdP with ID: ";
 
@@ -164,14 +166,17 @@ public class SsoNotificationController {
         try {
             verifyIdP(idp, id, redirectUri);
         } catch (NoMatchFoundException nmfe) {
-            response.sendRedirect(MessageFormat.format(passthruEndpoint, URLEncoder.encode(id, StandardCharsets.UTF_8),
-                    URLEncoder.encode(url, StandardCharsets.UTF_8),
-                    URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)));
+            if (null != passthruEndpoint) {
+                EVENT_LOGGER.info("No match found for id ('{}'). Redirecting to passthru", id);
+                LOGGER.info("No match found for id ('{}'). Redirecting to passthru", id);
+                response.sendRedirect(MessageFormat.format(passthruEndpoint, encodeParam(id), encodeParam(url),
+                        encodeParam(redirectUri)));
 
-            if (null != referrer) {
-                response.setHeader(HttpHeaders.REFERER, referrer);
+                if (null != referrer) {
+                    response.setHeader(HttpHeaders.REFERER, referrer);
+                }
+                return;
             }
-            return;
         }
         URL createdUrl = determineAndVerifyURL(idp, url, referrer);
 
@@ -250,6 +255,11 @@ public class SsoNotificationController {
         if (null == id) {
             EVENT_LOGGER.warn(EXCEPTION_ID_NOT_PROVIDED);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_NOT_PROVIDED);
+        }
+
+        if (id.length() == 0) {
+            EVENT_LOGGER.warn(EXCEPTION_ID_EMPTY);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_EMPTY);
         }
 
         if (null == idp) {
@@ -333,5 +343,9 @@ public class SsoNotificationController {
             result = verifyUrl(idp.getIdpUrlList(), referrer, "referrer");
         }
         return result;
+    }
+
+    private String encodeParam(String param) {
+        return (null != param && param.length() > 0) ? URLEncoder.encode(param, StandardCharsets.UTF_8) : "";
     }
 }
