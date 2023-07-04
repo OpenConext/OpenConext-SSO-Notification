@@ -3,17 +3,16 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | *CURRENT_VERSION*           |
-| Changes since version     | *LAST_VERSION*              |
+| Version                   | 2.1.1-SNAPSHOT              |
+| Changes since version     | 2.1.0                       |
 | Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                                                  |
+|:---------|:-------------------------------------------------------------|
+| ENT-4730 | Improve handling SSO notification request without parameters |
 
 
 ## Configuration changes
