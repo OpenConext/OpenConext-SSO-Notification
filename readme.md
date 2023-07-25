@@ -110,6 +110,17 @@ outage), the static file will NOT be used as a fallback.
 
 For a full example of the configurations, please refer to [Installation Manual](release/src/site/markdown/docs/installation-manual.md).
 
+It is possible to configure SSO-Notification such that it runs more in sync with the data-source. If this is done, 
+SSO-Notification periodically polls a check-sum endpoint exposed on the original data-source. The cache is then evicted
+if the check-sum has changed since the last time. To do this, the following configurations must be configured:
+
+      api.endpoint.url.cacheHash=
+      dataservices.fetchCacheHash.cronSchedule=-
+
+Where `api.endpoint.url.cacheHash` is the url (including endpoint) where the check-sum is exposed, and 
+`dataservices.fetchCacheHash.cronSchedule` is the cron-schedule at which the above endpoint will be polled. This schedule 
+is set to `-` by default, which disables this polling feature.
+
 ## Configuration of Engineblock
 
 Reading and processing SSO Notification cookies should be enabled in Engineblock. Furthermore, the encryption key

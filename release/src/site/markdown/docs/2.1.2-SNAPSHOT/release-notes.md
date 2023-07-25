@@ -11,12 +11,21 @@
 ## Changes
 <!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                                                             |
+|:---------|:------------------------------------------------------------------------|
+| ENT-4722 | Implement cache clear functionality                                     |
+| ENT-4744 | Update Institution Service & SSO-Notification cache to cache clear hash |
 
 
 ## Configuration changes
+
+The newly exposed cache-hash endpoint should be added to the configs to fetch the cache-hash:
+
+    api.endpoint.url.cacheHash=http://localhost:3000/api/cache-hash/sso-notification
+
+Furthermore, a cron schedule to retrieve the cache hash once a minute should also be added:
+
+    dataservices.fetchCacheHash.cronSchedule=0 * * * * *
 
 ## Known vulnerabilities
 
