@@ -24,6 +24,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * Guava cache configuration.
@@ -43,6 +44,7 @@ public class CacheConfig {
     }
 
     @CacheEvict(allEntries = true, cacheNames = { IDP_CACHE })
+    @Scheduled(fixedDelayString = "#{ ${idp.cache.expiration.time.seconds} * 1000 }")
     public void cacheEvict() {
         LOGGER.info("Cache evicted");
     }
