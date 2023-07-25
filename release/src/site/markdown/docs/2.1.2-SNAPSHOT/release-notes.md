@@ -11,9 +11,10 @@
 ## Changes
 <!-- Please note only the stories should be added. -->
 
-| #        | Description                         |
-|:---------|:------------------------------------|
-| ENT-4722 | Implement cache clear functionality |
+| #        | Description                                                             |
+|:---------|:------------------------------------------------------------------------|
+| ENT-4722 | Implement cache clear functionality                                     |
+| ENT-4744 | Update Institution Service & SSO-Notification cache to cache clear hash |
 
 
 ## Configuration changes
