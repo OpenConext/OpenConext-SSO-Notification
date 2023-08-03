@@ -55,6 +55,18 @@ public class CacheHashServiceTest {
     }
 
     @Test
+    void fetchCacheNullUrlTest() {
+        ReflectionTestUtils.setField(cacheHashService, "url", null);
+
+        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
+                any(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
+
+        String result = cacheHashService.fetchCacheHash();
+
+        assertEquals("", result);
+    }
+
+    @Test
     void fetchCacheHashHttpExceptionTest() {
         when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
                 any(ParameterizedTypeReference.class))).thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));

@@ -24,7 +24,7 @@ public class CacheHashService {
     @Value("${api.key.header.value}")
     private String apiKeyHeaderValue;
 
-    @Value("${api.endpoint.url.cacheHash}")
+    @Value("${api.endpoint.url.cacheHash:#{null}}")
     private String url;
 
     private final RestTemplate restTemplate;
@@ -34,6 +34,11 @@ public class CacheHashService {
     }
 
     public String fetchCacheHash() {
+        if (null == url) {
+            LOGGER.info("Cache hash endpoint not set, returning empty hash");
+            return "";
+        }
+
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add(API_KEY_HEADER, apiKeyHeaderValue);
 
@@ -45,16 +50,16 @@ public class CacheHashService {
 
             String result = response.getBody();
             if (null == result) {
-                LOGGER.warn("Received null from data-services cache-hash");
+                LOGGER.warn("Received null from data-services cache-hash, returning empty hash");
                 return "";
             }
 
             return result;
         } catch (HttpStatusCodeException htsce) {
-            LOGGER.error("Unexpected response received: " + htsce.getMessage());
+            LOGGER.error("Unexpected response received, returning empty hash. Error message: {}", htsce.getMessage());
             return "";
         } catch (RestClientException rce) {
-            LOGGER.error("Communication error occured: " + rce.getMessage());
+            LOGGER.error("Communication error occurred, returning empty hash. Error message: {} ", rce.getMessage());
             return "";
         }
     }

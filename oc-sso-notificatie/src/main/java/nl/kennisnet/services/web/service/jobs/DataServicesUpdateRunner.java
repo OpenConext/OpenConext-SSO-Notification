@@ -23,7 +23,7 @@ public class DataServicesUpdateRunner implements Runnable {
 
     private static final Lock execLock = new ReentrantLock();
 
-    private static  boolean running = false;
+    private static boolean running = false;
 
     private static String lastDataServicesCacheHash = "";
 
@@ -37,7 +37,7 @@ public class DataServicesUpdateRunner implements Runnable {
     }
 
     @Override
-    @Scheduled(cron = "${dataservices.fetchCacheHash.cronSchedule}")
+    @Scheduled(cron = "${dataservices.fetchCacheHash.cronSchedule:-}")
     public void run() {
         if (running || !execLock.tryLock()) {
             LOGGER.warn(ALREADY_RUNNING);
