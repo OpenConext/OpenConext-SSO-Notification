@@ -22,6 +22,15 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
+      - name: Fail build if version contains SNAPSHOT
+        run: |
+         VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+         if [[ "$VERSION" == *SNAPSHOT ]]; then
+           echo "Version contains SNAPSHOT, continuing the workflow."
+         else
+           echo "Version does not contain SNAPSHOT, failing the workflow!"
+           exit 1
+         fi
       - name: Build with Maven
         run: mvn -B -U clean verify install -P release -Djdk.net.URLClassPath.disableClassPathURLCheck=true
       - run: echo "ARTIFACT_FILE_NAME=$(ls oc-sso-notificatie/target/*.jar | xargs basename | sed 's/\.[^.]*$//')" >> $GITHUB_ENV
