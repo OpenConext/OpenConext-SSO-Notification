@@ -22,6 +22,15 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
+      - name: Fail build if version contains SNAPSHOT
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [[ "$VERSION" == *SNAPSHOT ]]; then
+            echo "Version contains SNAPSHOT, failing the workflow!"
+            exit 1
+          else
+            echo "Version is valid, continuing with the workflow."
+          fi
       - name: Build with Maven and publish package
         run: mvn -B -U clean verify install -P release deploy -Djdk.net.URLClassPath.disableClassPathURLCheck=true
         env:
