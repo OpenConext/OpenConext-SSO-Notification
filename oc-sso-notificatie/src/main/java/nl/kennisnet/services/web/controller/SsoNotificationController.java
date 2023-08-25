@@ -134,13 +134,14 @@ public class SsoNotificationController {
     public void processSsoNotification(@RequestParam(required = false) String id,
                                        @RequestParam(required = false) String url,
                                        @RequestParam(required = false) String redirectUri,
+                                       @RequestParam(required = false) String realm,
                                        @RequestHeader(value = HttpHeaders.REFERER, required = false) String referrer,
                                        @CookieValue(value = COOKIE_NOTIFICATION, required = false) String notificationCookie,
                                        HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        LOGGER.info("Request received with id ('{}') url ('{}') redirectUri ('{}') referrer ('{}') " +
-                        "notificationCookie ('{}')", id, url, redirectUri, referrer, notificationCookie);
+        LOGGER.info("Request received with id ('{}') url ('{}') redirectUri ('{}') referrer ('{}') realm ('{}') " +
+                        "notificationCookie ('{}')", id, url, redirectUri, referrer, realm, notificationCookie);
 
         // Add IdP id to logback and set default to failed
         MDC.put(IDP, String.valueOf(id));
@@ -181,10 +182,10 @@ public class SsoNotificationController {
         URL createdUrl = determineAndVerifyURL(idp, url, referrer);
 
         // Set notification cookie
-        LOGGER.info("Setting notification Cookie ('{}') for id ('{}') with url ('{}')",
-                COOKIE_NOTIFICATION, id, createdUrl);
+        LOGGER.info("Setting notification Cookie ('{}') for id ('{}') with url ('{}') and realm ('{}')",
+                COOKIE_NOTIFICATION, id, createdUrl, realm);
 
-        Cookie cNotification = cookiesHandler.createCookie(COOKIE_NOTIFICATION, id, createdUrl);
+        Cookie cNotification = cookiesHandler.createCookie(COOKIE_NOTIFICATION, id, createdUrl, realm);
         response.addCookie(cNotification);
         response.addHeader("Content-Type", "application/javascript");
 

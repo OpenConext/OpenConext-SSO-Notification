@@ -9,12 +9,10 @@
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
-
+| #        | Description                                                                |
+|:---------|:---------------------------------------------------------------------------|
+| ENT-4505 | Adapt SSO notification service to support realm in SSO notification cookie |
 
 ## Configuration changes
 

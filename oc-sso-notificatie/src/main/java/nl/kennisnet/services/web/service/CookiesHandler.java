@@ -81,15 +81,15 @@ public class CookiesHandler {
      * and setting other properties using {@link Cookie#setDomain(String)},
      * {@link Cookie#setSecure(boolean)} }
      */
-    public Cookie createCookie(String name, String id, URL url) throws JsonProcessingException {
-        return createCookie(name, createCookieValue(id, url));
+    public Cookie createCookie(String name, String id, URL url, String realm) throws JsonProcessingException {
+        return createCookie(name, createCookieValue(id, url, realm));
     }
 
-    private String createCookieValue(String id, URL url) throws JsonProcessingException {
+    private String createCookieValue(String id, URL url, String realm) throws JsonProcessingException {
         // Create JSON mapping
         ObjectMapper objectMapper = new ObjectMapper();
         return URLEncoder.encode(cryptoManager.encrypt(
-                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString()))), StandardCharsets.UTF_8);
+                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString(), realm))), StandardCharsets.UTF_8);
     }
 
     private Cookie createCookie(String name, String value) {

@@ -101,7 +101,7 @@ class SsoNotificationControllerTest {
                 Lists.newArrayList("http://www.example.com")));
 
         when(idPProvider.getAllSsoNotifications()).thenReturn(ssoNotifications);
-        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class))).thenReturn(
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
                 new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
 
         ReflectionTestUtils.setField(controller, "tgtCookieName", tgtCookieName);

@@ -65,11 +65,13 @@ class CookieHandlerTest {
 
     private static final String testUrl = "https://testUrl";
 
+    private static final String testRealm = "testRealm";
+
     @Test
-    void createCookieTest() throws Exception {
+    void createCookieNoRealmTest() throws Exception {
         // Create Cookie
         Cookie cookie = handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId,
-                new URL(testUrl));
+                new URL(testUrl), null);
 
         // Check Cookie
         assertNotNull(cookie);
@@ -87,6 +89,32 @@ class CookieHandlerTest {
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
         assertEquals(testUrl, cookieValueDTO.getUrl());
+        assertNull(cookieValueDTO.getRealm());
+    }
+
+    @Test
+    void createCookieRealmTest() throws Exception {
+        // Create Cookie
+        Cookie cookie = handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId,
+                new URL(testUrl), testRealm);
+
+        // Check Cookie
+        assertNotNull(cookie);
+        assertEquals(SsoNotificationController.COOKIE_NOTIFICATION, cookie.getName());
+        assertNotEquals(0, cookie.getValue().length());
+        assertEquals(domain, cookie.getDomain());
+        assertEquals(path, cookie.getPath());
+        assertEquals(secured, cookie.getSecure());
+
+        // Check Cookie value
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString =
+                cookieDecrypter.decrypt(URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8));
+
+        CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
+        assertEquals(testEntityId, cookieValueDTO.getEntityId());
+        assertEquals(testUrl, cookieValueDTO.getUrl());
+        assertEquals(testRealm, cookieValueDTO.getRealm());
     }
 
     @DirtiesContext
@@ -94,7 +122,7 @@ class CookieHandlerTest {
     void createCookieNoVersionTest() throws Exception {
         // Create Cookie
         Cookie cookie = handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId,
-                new URL(testUrl));
+                new URL(testUrl), null);
 
         // Check Cookie
         assertNotNull(cookie);
@@ -112,6 +140,7 @@ class CookieHandlerTest {
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
         assertEquals(testUrl, cookieValueDTO.getUrl());
+        assertNull(cookieValueDTO.getRealm());
     }
 
     @DirtiesContext
@@ -121,7 +150,7 @@ class CookieHandlerTest {
 
         // Create Cookie
         Cookie cookie =
-                handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId, new URL(testUrl));
+                handler.createCookie(SsoNotificationController.COOKIE_NOTIFICATION, testEntityId, new URL(testUrl), null);
 
         // Check Cookie
         assertNotNull(cookie);
@@ -137,6 +166,7 @@ class CookieHandlerTest {
         CookieValueDTO cookieValueDTO = objectMapper.readValue(jsonString, CookieValueDTO.class);
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
         assertEquals(testUrl, cookieValueDTO.getUrl());
+        assertNull(cookieValueDTO.getRealm());
     }
 
     @Test
