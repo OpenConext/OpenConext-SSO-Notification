@@ -12,9 +12,16 @@
 
 | #        | Description                                                                |
 |:---------|:---------------------------------------------------------------------------|
+| ENT-4200 | Remove old code from OC SSO notification Service                           |
 | ENT-4505 | Adapt SSO notification service to support realm in SSO notification cookie |
 
 ## Configuration changes
+
+### ENT-4200: Remove old code from OC SSO notification Service
+As removing the TGT cookie has no effect on EngineBlock, all features surrounding the tgt cookie have been removed.
+This includes the following configuration:
+
+    tgt.cookie.name=tgt_cookie
 
 ## Known vulnerabilities
 

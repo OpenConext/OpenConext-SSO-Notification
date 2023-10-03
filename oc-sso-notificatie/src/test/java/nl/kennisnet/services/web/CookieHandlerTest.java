@@ -16,7 +16,6 @@
 package nl.kennisnet.services.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import nl.kennisnet.services.web.controller.SsoNotificationController;
 import nl.kennisnet.services.web.model.CookieValueDTO;
 import nl.kennisnet.services.web.service.CookiesHandler;
@@ -26,8 +25,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -57,9 +54,6 @@ class CookieHandlerTest {
 
     @Value("${notification.cookie.path:/}")
     private String path;
-
-    @Value("${tgt.cookie.name}")
-    private String tgtCookieName;
 
     private static final String testEntityId = "testEntityId";
 
@@ -167,31 +161,6 @@ class CookieHandlerTest {
         assertEquals(testEntityId, cookieValueDTO.getEntityId());
         assertEquals(testUrl, cookieValueDTO.getUrl());
         assertNull(cookieValueDTO.getRealm());
-    }
-
-    @Test
-    void removeCookieNotPresentTest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        handler.removeCookieIfPresent(SsoNotificationController.COOKIE_NOTIFICATION, request, response);
-
-        assertNull(response.getCookie(SsoNotificationController.COOKIE_NOTIFICATION));
-    }
-
-    @Test
-    void removeCookiePresentTest() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie(tgtCookieName, "differentvalue"));
-        MockHttpServletResponse response = new MockHttpServletResponse();
-
-        handler.removeCookieIfPresent(tgtCookieName, request, response);
-
-        Cookie cookie = response.getCookie(tgtCookieName);
-        assertNotNull(cookie);
-        assertEquals(StringUtils.EMPTY, cookie.getValue());
-        assertEquals(0, cookie.getMaxAge());
-        assertEquals(tgtCookieName, cookie.getName());
     }
 
 }

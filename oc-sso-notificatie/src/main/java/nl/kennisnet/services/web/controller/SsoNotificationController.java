@@ -93,10 +93,6 @@ public class SsoNotificationController {
     /** The name of the SSO Cookie notification ({@value}) */
     public static final String COOKIE_NOTIFICATION = "ssonot";
 
-    /** The name of the TGT cookie */
-    @Value("${tgt.cookie.name}")
-    private String tgtCookieName;
-
     @Value("${passthru.endpoint:#{null}}")
     private String passthruEndpoint;
 
@@ -188,12 +184,6 @@ public class SsoNotificationController {
         Cookie cNotification = cookiesHandler.createCookie(COOKIE_NOTIFICATION, id, createdUrl, realm);
         response.addCookie(cNotification);
         response.addHeader("Content-Type", "application/javascript");
-
-        // Remove TGT cookie if notification cookie changed
-        if (!cNotification.getValue().equals(notificationCookie)) {
-            LOGGER.info("Removing TGT Cookie if present ('{}').", tgtCookieName);
-            cookiesHandler.removeCookieIfPresent(tgtCookieName, request, response);
-        }
 
         if (redirectUri != null) {
             MDC.put(EVENT, SSONOT_REDIRECT);
