@@ -56,7 +56,7 @@ class IdPProviderTest {
     private String endpointUrl;
 
     @Test
-    public void getIdPTest() throws Exception {
+    void getIdPTest() throws Exception {
         String resource = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
         this.server.expect(requestTo(createUrl())).andRespond(withSuccess(resource, MediaType.APPLICATION_JSON));
 
@@ -79,13 +79,13 @@ class IdPProviderTest {
     }
 
     @Test
-    public void invalidApiKeyTest() {
+    void invalidApiKeyTest() {
         this.server.expect(requestTo(createUrl())).andRespond(withUnauthorizedRequest());
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> provider.getAllSsoNotifications());
     }
 
     @Test
-    public void notFoundResponseTest()  {
+    void notFoundResponseTest()  {
         this.server.expect(requestTo(createUrl())).andRespond(withStatus(HttpStatus.NOT_FOUND));
         assertTrue(provider.getAllSsoNotifications().isEmpty());
     }

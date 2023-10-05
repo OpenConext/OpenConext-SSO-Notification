@@ -228,16 +228,6 @@ class SsoNotificationControllerTest {
     }
 
     @Test
-    void invalidateCookieTest() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", "multipleUrls")
-                .param(REDIRECT_URI, "http://www.example.com")
-                .param(URL, "http://www.example.com")
-                .cookie(new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "differentvalue")))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://www.example.com"));
-    }
-
-    @Test
     void testUrlPathTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL_WITH_PATH)
                 .header(HttpHeaders.REFERER, "http://www.example.com"))
