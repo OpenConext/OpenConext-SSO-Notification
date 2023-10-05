@@ -23,35 +23,26 @@ import nl.kennisnet.services.web.service.IdPProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.net.URL;
 import java.util.ArrayList;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class SsoNotificationControllerTest {
-
-    @Value("${tgt.cookie.name}")
-    private String tgtCookieName;
 
     private static final String SINGLE_URL = "singleUrl";
     private static final String SINGLE_URL_WITH_PATH = "singleUrlWithPath";
@@ -80,8 +71,6 @@ class SsoNotificationControllerTest {
     @Mock
     private IdPProvider idPProvider;
 
-    private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
-
     @BeforeEach
     void setUp() throws Exception {
         this.mvc = MockMvcBuilders.standaloneSetup(controller).build();
@@ -101,10 +90,8 @@ class SsoNotificationControllerTest {
                 Lists.newArrayList("http://www.example.com")));
 
         when(idPProvider.getAllSsoNotifications()).thenReturn(ssoNotifications);
-        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class))).thenReturn(
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
                 new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
-
-        ReflectionTestUtils.setField(controller, "tgtCookieName", tgtCookieName);
     }
 
     @Test
@@ -238,22 +225,6 @@ class SsoNotificationControllerTest {
                 .param(REDIRECT_URI, "http://www.example.com")
                 .param(URL, "http://www.example.com"))
                 .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void invalidateCookieTest() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", "multipleUrls")
-                .param(REDIRECT_URI, "http://www.example.com")
-                .param(URL, "http://www.example.com")
-                .cookie(new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "differentvalue"))
-                .cookie(new Cookie(tgtCookieName, "tgtvalue")))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("http://www.example.com"));
-        // Let's make sure the tgt cookie will be removed
-        verify(cookiesHandler).removeCookieIfPresent(argumentCaptor.capture(), any(HttpServletRequest.class),
-                any(HttpServletResponse.class));
-
-        assertEquals(argumentCaptor.getValue(), tgtCookieName);
     }
 
     @Test

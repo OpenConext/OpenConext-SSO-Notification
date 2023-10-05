@@ -30,4 +30,6 @@ public class CookieValueDTO {
 
     private String url;
 
+    private String realm;
+
 }

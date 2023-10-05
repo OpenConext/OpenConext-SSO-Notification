@@ -19,8 +19,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
 /**
  * Handler performs different operations on cookies
@@ -56,22 +53,6 @@ public class CookiesHandler {
     }
 
     /**
-     * Removes cookie with given name, if it presents.
-     *
-     * @param cookieName cookie name.
-     * @param request    HTTP Servlet Request.
-     * @param response   HTTP Servlet Response.
-     */
-    public void removeCookieIfPresent(String cookieName, HttpServletRequest request, HttpServletResponse response) {
-        Cookie tgtCookie = WebUtils.getCookie(request, cookieName);
-        if (null != tgtCookie) {
-            tgtCookie.setValue(StringUtils.EMPTY);
-            tgtCookie.setMaxAge(0);
-            response.addCookie(tgtCookie);
-        }
-    }
-
-    /**
      * Creates cookie with given name and generated based on given id and url value.
      *
      * @param name cookie name.
@@ -81,15 +62,15 @@ public class CookiesHandler {
      * and setting other properties using {@link Cookie#setDomain(String)},
      * {@link Cookie#setSecure(boolean)} }
      */
-    public Cookie createCookie(String name, String id, URL url) throws JsonProcessingException {
-        return createCookie(name, createCookieValue(id, url));
+    public Cookie createCookie(String name, String id, URL url, String realm) throws JsonProcessingException {
+        return createCookie(name, createCookieValue(id, url, realm));
     }
 
-    private String createCookieValue(String id, URL url) throws JsonProcessingException {
+    private String createCookieValue(String id, URL url, String realm) throws JsonProcessingException {
         // Create JSON mapping
         ObjectMapper objectMapper = new ObjectMapper();
         return URLEncoder.encode(cryptoManager.encrypt(
-                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString()))), StandardCharsets.UTF_8);
+                objectMapper.writeValueAsString(new CookieValueDTO(id, url.toString(), realm))), StandardCharsets.UTF_8);
     }
 
     private Cookie createCookie(String name, String value) {

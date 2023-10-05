@@ -13,7 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class DataServicesUpdateRunnerTest {
+class DataServicesUpdateRunnerTest {
 
     @Mock
     CacheHashService cacheHashService;

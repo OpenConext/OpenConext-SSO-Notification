@@ -132,6 +132,18 @@ process. Below are the configurations needed in Engineblock.
     sso_notification_encryption_key: <xxx>
     sso_notification_encryption_key_salt: <xxx>
 
+## Other features
+
+### Realm scoping
+It is possible to enrich the SAML authentication scoping elements with realms. Realms
+provide a unique identifier which can be used to scope further in the authentication process.
+For the SSO Notification, a realm can be added to the cookie by adding an optional request 
+parameter to the request to the SSO Notification service as follows:
+
+    ...&realm=<realm>
+
+See section Testing the service for a full example of a request. 
+
 ## Testing the service
 
 Note that you'll need to have a valid Referer HTTP header, so it is necessary to set up a web server running on the 
@@ -141,7 +153,7 @@ through HTTPS.
 
 Then a request can be sent to the service, for example:
 
-    https://sso.vm.openconext.org?id=my-idp-entityid&url=https://domain.com&redirectUri=https://engine.vm.openconext.org
+    https://sso.vm.openconext.org?id=my-idp-entityid&url=https://domain.com&redirectUri=https://engine.vm.openconext.org&realm=testRealm
 
 A description for a quick test with a simple HTML page can be found in [test.md](release/src/site/markdown/docs/test.md).
 
@@ -152,7 +164,7 @@ OC SSO Notification - [Apache License, Version 2.0](LICENSE-2.0.txt)
 ## Contact
 For more information, contact [Stichting Kennisnet](mailto:implementaties@kennisnet.nl).
 
-**Copyright(c) 2021 [Stichting Kennisnet]**
+**Copyright(c) 2023 [Stichting Kennisnet]**
 
 [//]: # (These are reference links used in the body of this note)
    [Stichting Kennisnet]: <http://www.kennisnet.nl>
