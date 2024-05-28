@@ -18,6 +18,7 @@ package nl.kennisnet.services.web.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,20 +43,21 @@ public class WebSecurityConfig {
         // This application only contains public pages. The Spring Boot Actuator Endpoints can be protected by the
         // config in Spring Boot Actuator Endpoints.
         if (null != managementSecurityRoles) {
-            http.authorizeHttpRequests()
-                .requestMatchers("/actuator/**").hasRole(managementSecurityRoles)
-                .anyRequest().permitAll();
-
-            http.httpBasic();
+            http.authorizeHttpRequests(authz -> authz
+                    .requestMatchers("/actuator/**").hasRole(managementSecurityRoles)
+                    .anyRequest().permitAll()
+            ).httpBasic(Customizer.withDefaults());
         } else {
-            http.authorizeHttpRequests().anyRequest().permitAll();
+            http.authorizeHttpRequests(authz -> authz
+                    .anyRequest().permitAll());
         }
 
         // We have to disable the X-Frame-Options since this SSO Notification service can be invoked within an iframe.
-        http.headers().frameOptions().disable();
-
         // Disable all security headers so this service can be invoked within 3rd-party applications.
-        http.headers().disable();
+        http.headers(headers -> headers
+                .frameOptions(Customizer.withDefaults())
+                .disable());
+
         return http.build();
     }
 

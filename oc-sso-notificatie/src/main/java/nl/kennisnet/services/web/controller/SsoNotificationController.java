@@ -227,7 +227,7 @@ public class SsoNotificationController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_NOT_PROVIDED);
         }
 
-        if (id.length() == 0) {
+        if (id.isEmpty()) {
             EVENT_LOGGER.warn(EXCEPTION_ID_EMPTY);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_EMPTY);
         }
@@ -309,4 +309,3 @@ public class SsoNotificationController {
         return result;
     }
 }
-
