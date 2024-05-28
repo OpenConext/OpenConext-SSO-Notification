@@ -16,14 +16,12 @@
 package nl.kennisnet.services.web.controller;
 
 import nl.kennisnet.services.web.config.CacheConfig;
-import nl.kennisnet.services.web.exception.NoMatchFoundException;
 import nl.kennisnet.services.web.model.IdP;
 import nl.kennisnet.services.web.service.CookiesHandler;
 import nl.kennisnet.services.web.service.IdPProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -37,9 +35,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -93,9 +88,6 @@ public class SsoNotificationController {
     /** The name of the SSO Cookie notification ({@value}) */
     public static final String COOKIE_NOTIFICATION = "ssonot";
 
-    @Value("${passthru.endpoint:#{null}}")
-    private String passthruEndpoint;
-
     private final CacheConfig cacheConfig;
 
     private final CookiesHandler cookiesHandler;
@@ -137,7 +129,7 @@ public class SsoNotificationController {
             throws IOException {
 
         LOGGER.info("Request received with id ('{}') url ('{}') redirectUri ('{}') referrer ('{}') realm ('{}') " +
-                        "notificationCookie ('{}')", id, url, redirectUri, referrer, realm, notificationCookie);
+                "notificationCookie ('{}')", id, url, redirectUri, referrer, realm, notificationCookie);
 
         // Add IdP id to logback and set default to failed
         MDC.put(IDP, String.valueOf(id));
@@ -160,21 +152,9 @@ public class SsoNotificationController {
         }
 
         IdP idp = ssoNotifications.stream().filter(p -> p.getEntityId().equalsIgnoreCase(id)).findAny().orElse(null);
-        try {
-            verifyIdP(idp, id, redirectUri);
-        } catch (NoMatchFoundException nmfe) {
-            if (null != passthruEndpoint) {
-                EVENT_LOGGER.info("No match found for id ('{}'). Redirecting to passthru", id);
-                LOGGER.info("No match found for id ('{}'). Redirecting to passthru", id);
-                response.sendRedirect(MessageFormat.format(passthruEndpoint, encodeParam(id), encodeParam(url),
-                        encodeParam(redirectUri)));
 
-                if (null != referrer) {
-                    response.setHeader(HttpHeaders.REFERER, referrer);
-                }
-                return;
-            }
-        }
+        verifyIdP(idp, id, redirectUri);
+
         URL createdUrl = determineAndVerifyURL(idp, url, referrer);
 
         // Set notification cookie
@@ -240,9 +220,8 @@ public class SsoNotificationController {
      * @param redirectUri the redirect URL used (OPTIONAL)
      *
      * @throws ResponseStatusException if the idp is invalid.
-     * @throws NoMatchFoundException if the idp was not found and confederational redirects are enabled
      */
-    private void verifyIdP(IdP idp, String id, String redirectUri) throws NoMatchFoundException {
+    private void verifyIdP(IdP idp, String id, String redirectUri) {
         if (null == id) {
             EVENT_LOGGER.warn(EXCEPTION_ID_NOT_PROVIDED);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, EXCEPTION_ID_NOT_PROVIDED);
@@ -255,17 +234,11 @@ public class SsoNotificationController {
 
         if (null == idp) {
             EVENT_LOGGER.warn("Unknown 'id' parameter found in request: {}", id);
-            if (null != passthruEndpoint) {
-                throw new NoMatchFoundException();
-            }
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, EXCEPTION_UNKNOWN_ID + id);
         }
 
         if (CollectionUtils.isEmpty(idp.getIdpUrlList())) {
             EVENT_LOGGER.warn("No valid URL expression associated with the IdP available for IdP with ID: {}", id);
-            if (null != passthruEndpoint) {
-                throw new NoMatchFoundException();
-            }
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, EXCEPTION_NO_VALID_URL_EXPRESSION_IDP + id);
         }
 
@@ -335,8 +308,5 @@ public class SsoNotificationController {
         }
         return result;
     }
-
-    private String encodeParam(String param) {
-        return (null != param && param.length() > 0) ? URLEncoder.encode(param, StandardCharsets.UTF_8) : "";
-    }
 }
+
