@@ -17,7 +17,6 @@ package nl.kennisnet.services.web.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import nl.kennisnet.services.web.config.CacheConfig;
 import nl.kennisnet.services.web.model.IdP;
 import org.slf4j.Logger;
@@ -88,8 +87,8 @@ public class IdPProvider {
      */
     @Cacheable(value = CacheConfig.IDP_CACHE)
     public List<IdP> getAllSsoNotifications() {
-        if (!Strings.isNullOrEmpty(endpointUrl) && !Strings.isNullOrEmpty(apiKeyHeaderKey) &&
-                !Strings.isNullOrEmpty(apiKeyHeaderValue) && !Strings.isNullOrEmpty(endpointAllSuffix)) {
+        if (stringIsNotNullOrEmpty(endpointUrl) && stringIsNotNullOrEmpty(apiKeyHeaderKey) &&
+                stringIsNotNullOrEmpty(apiKeyHeaderValue) && stringIsNotNullOrEmpty(endpointAllSuffix)) {
 
            return getAllSsoNotificationsFromDataServices();
         } else {
@@ -133,6 +132,10 @@ public class IdPProvider {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add(apiKeyHeaderKey, apiKeyHeaderValue);
         return requestHeaders;
+    }
+
+    private boolean stringIsNotNullOrEmpty(String string) {
+        return string != null && !string.isEmpty();
     }
 
 }

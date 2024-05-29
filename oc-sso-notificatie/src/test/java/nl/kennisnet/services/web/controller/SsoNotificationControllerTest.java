@@ -15,7 +15,6 @@
  */
 package nl.kennisnet.services.web.controller;
 
-import com.google.common.collect.Lists;
 import nl.kennisnet.services.web.config.CacheConfig;
 import nl.kennisnet.services.web.model.IdP;
 import nl.kennisnet.services.web.service.CookiesHandler;
@@ -35,6 +34,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import jakarta.servlet.http.Cookie;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
@@ -76,18 +76,18 @@ class SsoNotificationControllerTest {
         this.mvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         ArrayList<IdP> ssoNotifications = new ArrayList<>();
-        ssoNotifications.add(new IdP(NO_PATH_URL_IDP, null, Lists.newArrayList("http://www.example.com")));
-        ssoNotifications.add(new IdP(NO_PATH_URL_REDIRECT, Lists.newArrayList("http://www.example.com"), null));
-        ssoNotifications.add(new IdP(SINGLE_URL, Lists.newArrayList("http://www.example.com"),
-                Lists.newArrayList("https://applicatie.nl")));
+        ssoNotifications.add(new IdP(NO_PATH_URL_IDP, null, List.of("http://www.example.com")));
+        ssoNotifications.add(new IdP(NO_PATH_URL_REDIRECT, List.of("http://www.example.com"), null));
+        ssoNotifications.add(new IdP(SINGLE_URL, List.of("http://www.example.com"),
+                List.of("https://applicatie.nl")));
 
         ssoNotifications.add(new IdP(MULTIPLE_URLS,
-                Lists.newArrayList("http://www.example.com", "http://www.exampledomain.com"),
-                Lists.newArrayList("http://www.example.com", "http://www.exampledomain.com")));
+                List.of("http://www.example.com", "http://www.exampledomain.com"),
+                List.of("http://www.example.com", "http://www.exampledomain.com")));
 
-        ssoNotifications.add(new IdP(SINGLE_WILDCARD_URL, Lists.newArrayList("http://*.example.com"), null));
-        ssoNotifications.add(new IdP(SINGLE_URL_WITH_PATH, Lists.newArrayList("http://www.example.com"),
-                Lists.newArrayList("http://www.example.com")));
+        ssoNotifications.add(new IdP(SINGLE_WILDCARD_URL, List.of("http://*.example.com"), null));
+        ssoNotifications.add(new IdP(SINGLE_URL_WITH_PATH, List.of("http://www.example.com"),
+                List.of("http://www.example.com")));
 
         when(idPProvider.getAllSsoNotifications()).thenReturn(ssoNotifications);
         when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
@@ -262,7 +262,7 @@ class SsoNotificationControllerTest {
                 .param(REDIRECT_URI, "http://www.example.com")
                 .header(HttpHeaders.REFERER, "http://www.example.com"));
 
-        when(idPProvider.getAllSsoNotifications()).thenReturn(Lists.newArrayList());
+        when(idPProvider.getAllSsoNotifications()).thenReturn(List.of());
 
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL_WITH_PATH)
                 .param(REDIRECT_URI, "http://www.example.com")
@@ -274,7 +274,7 @@ class SsoNotificationControllerTest {
 
     @Test
     void testNoData() throws Exception {
-        when(idPProvider.getAllSsoNotifications()).thenReturn(Lists.newArrayList());
+        when(idPProvider.getAllSsoNotifications()).thenReturn(List.of());
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL_WITH_PATH)
                 .param(REDIRECT_URI, "http://www.example.com")
                 .header(HttpHeaders.REFERER, "http://www.example.com"))

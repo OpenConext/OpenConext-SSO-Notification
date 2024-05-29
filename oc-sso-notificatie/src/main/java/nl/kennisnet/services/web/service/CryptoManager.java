@@ -15,7 +15,6 @@
  */
 package nl.kennisnet.services.web.service;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +34,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
 
 /**
  * Encrypts data using algorithm and secured key from properties
@@ -83,10 +83,9 @@ public class CryptoManager {
                     .put(enc)
                     .array();
 
-            byte[] b64 = Base64.encodeBase64(cipherText, false);
-            return new String(b64, StandardCharsets.UTF_8);
+            return Base64.getEncoder().encodeToString(cipherText);
         } catch (Exception ex) {
-            LOGGER.error("Encryption error: {} trace: {}", ex.getMessage() , ex);
+            LOGGER.error("Encryption error: {}", ex.getMessage() , ex);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

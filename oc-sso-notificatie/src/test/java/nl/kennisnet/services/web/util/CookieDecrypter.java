@@ -15,7 +15,6 @@
  */
 package nl.kennisnet.services.web.util;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +30,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
 
 @Component
 public class CookieDecrypter {
@@ -51,7 +51,7 @@ public class CookieDecrypter {
     public String decrypt(String encrypted) throws InvalidKeySpecException, NoSuchAlgorithmException, NoSuchPaddingException,
             InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
-        byte[] encryptedBytes = Base64.decodeBase64(encrypted);
+        byte[] encryptedBytes = Base64.getDecoder().decode(encrypted);
 
         ByteBuffer byteBuffer = ByteBuffer.wrap(encryptedBytes);
         byte[] iv = new byte[IV_SIZE];
