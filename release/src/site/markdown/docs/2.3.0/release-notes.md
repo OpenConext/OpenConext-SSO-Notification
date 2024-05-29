@@ -3,9 +3,9 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.3.0-SNAPSHOT              |
+| Version                   | 2.3.0                       |
 | Changes since version     | 2.2.1                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 29-05-2024 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
