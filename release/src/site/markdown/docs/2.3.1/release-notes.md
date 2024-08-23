@@ -3,20 +3,21 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.3.1-SNAPSHOT              |
+| Version                   | 2.3.1                       |
 | Changes since version     | 2.3.0                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 23-08-2024 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                          |
+|:---------|:-------------------------------------|
+| ENT-5035 | Build release SSO notification 2.3.1 |
 
 
 ## Configuration changes
+
+None.
 
 ## Known vulnerabilities
 
