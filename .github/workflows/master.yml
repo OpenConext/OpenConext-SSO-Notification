@@ -22,20 +22,23 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
-      - name: Fail build if version contains SNAPSHOT
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          if [[ "$VERSION" == *SNAPSHOT ]]; then
-            echo "Version contains SNAPSHOT, failing the workflow!"
-            exit 1
-          else
-            echo "Version is valid, continuing with the workflow."
-          fi
+      - run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - run: echo "BUILD_VERSION=${VERSION%-SNAPSHOT}" >> $GITHUB_ENV
       - name: Build with Maven and publish package
-        run: mvn -B -U clean verify install -P release deploy -Djdk.net.URLClassPath.disableClassPathURLCheck=true
+        run: |
+          echo $VERSION
+          echo $BUILD_VERSION
+          if [[ "$VERSION" == *SNAPSHOT ]]; then
+            git config --global user.email "info@example.com"
+            git config --global user.name "Maven Release Plugin"
+          
+            mvn -B clean release:prepare release:perform -Prelease -DreleaseVersion=$BUILD_VERSION -Dresume=false -DautoVersionSubmodules=true -DdryRun=false -Dmaven.test.skip=true -DskipITs -DscmCommentPrefix="[maven-release-plugin][ci skip] " -Djdk.net.URLClassPath.disableClassPathURLCheck=true
+          else
+            echo "Version is not valid, failing the workflow."
+            exit 1
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo "RELEASE_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_ENV
       - run: echo "ARTIFACT_JAR_FILE=$(ls oc-sso-notificatie/target/*.jar | xargs basename)" >> $GITHUB_ENV
       - run: echo "ARTIFACT_FILE_NAME=$(ls oc-sso-notificatie/target/*.jar | xargs basename | sed 's/\.[^.]*$//')" >> $GITHUB_ENV
       - run: echo "ARTIFACT_PATH=$(ls oc-sso-notificatie/target/*.jar)" >> $GITHUB_ENV
@@ -49,8 +52,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: Release ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ env.BUILD_VERSION }}
+          release_name: Release ${{ env.BUILD_VERSION }}
           draft: false
           prerelease: false
       - name: Upload Release Asset

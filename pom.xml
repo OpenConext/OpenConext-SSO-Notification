@@ -30,6 +30,12 @@
     <name>OC SSO Notification</name>
     <description>OpenConext SSO Notification as a separate Service.</description>
 
+    <scm>
+        <url>https://github.com/OpenConext/OpenConext-SSO-Notification</url>
+        <developerConnection>scm:git:https://github.com/OpenConext/OpenConext-SSO-Notification.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <inceptionYear>2021</inceptionYear>
 
     <properties>
@@ -60,6 +66,14 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven-deploy-plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -105,9 +119,10 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>${maven.release.version}</version>
                 <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                     <releaseProfiles>release</releaseProfiles>
                     <remoteTagging>true</remoteTagging>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>${BUILD_VERSION}</tagNameFormat>
                 </configuration>
                 <dependencies>
                     <dependency>
