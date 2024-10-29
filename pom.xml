@@ -43,6 +43,7 @@
         <java.version>17</java.version>
         <jacoco.version>0.8.10</jacoco.version>
         <dependency-check-maven.version>10.0.4</dependency-check-maven.version>
+        <ecs-logging-java.version>1.6.0</ecs-logging-java.version>
         <logback.encoder.version>5.3</logback.encoder.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     </properties>
@@ -52,6 +53,14 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.5</version>
     </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>co.elastic.logging</groupId>
+            <artifactId>logback-ecs-encoder</artifactId>
+            <version>${ecs-logging-java.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
