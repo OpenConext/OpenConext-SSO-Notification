@@ -41,17 +41,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <doxia-module-markdown.version>1.5</doxia-module-markdown.version>
         <jacoco.version>0.8.10</jacoco.version>
-        <dependency-check-maven.version>10.0.4</dependency-check-maven.version>
+        <dependency-check-maven.version>11.1.1</dependency-check-maven.version>
         <ecs-logging-java.version>1.6.0</ecs-logging-java.version>
         <logback.encoder.version>5.3</logback.encoder.version>
+        <maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.6</version>
+        <version>3.3.8</version>
     </parent>
 
     <build>
@@ -121,18 +124,6 @@
                     <remoteTagging>true</remoteTagging>
                     <tagNameFormat>${BUILD_VERSION}</tagNameFormat>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.11.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-api</artifactId>
-                        <version>1.11.2</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
         <pluginManagement>

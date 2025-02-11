@@ -3,17 +3,16 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.3.3-SNAPSHOT              |
+| Version                   | 2.3.3                       |
 | Changes since version     | 2.3.2                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 11-02-2025 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                             |
+|:---------|:----------------------------------------|
+| ENT-5128 | Build release OC SSO Notification 2.3.3 |
 
 
 ## Configuration changes
