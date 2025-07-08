@@ -15,6 +15,7 @@
  */
 package nl.kennisnet.services.web.interceptor;
 
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -53,7 +54,7 @@ public class DisableCacheInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o,
-                           ModelAndView modelAndView)  {
+                           @Nullable ModelAndView modelAndView)  {
         // This implementation is empty. This functionality is not required to set specific headers.
     }
 
@@ -62,7 +63,7 @@ public class DisableCacheInterceptor implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                Object o, Exception e) {
+                                Object o, @Nullable Exception e) {
 
         // This implementation is empty. This functionality is not required to set specific headers.
     }
