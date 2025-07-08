@@ -54,7 +54,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.4.7</version>
     </parent>
 
     <build>
@@ -193,15 +193,6 @@
             <email>Kok.Stephan@kpmg.nl</email>
         </developer>
         <developer>
-            <id>jong01</id>
-            <name>Vincent Jong</name>
-            <organization>KPMG Advisory N.V.</organization>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <email>Jong.Vincent@kpmg.nl</email>
-        </developer>
-        <developer>
             <id>mutlu01</id>
             <name>Aram Mutlu</name>
             <organization>KPMG Advisory N.V.</organization>
@@ -213,6 +204,14 @@
     </developers>
 
     <contributors>
+        <contributor>
+            <name>Vincent Jong</name>
+            <organization>KPMG Advisory N.V.</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <email>Jong.Vincent@kpmg.nl</email>
+        </contributor>
         <contributor>
             <name>Tim Poot</name>
             <organization>KPMG Advisory N.V.</organization>
