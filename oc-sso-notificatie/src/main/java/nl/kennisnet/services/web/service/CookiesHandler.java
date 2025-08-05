@@ -22,7 +22,7 @@ import jakarta.servlet.http.Cookie;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import nl.kennisnet.services.web.model.CookieValueDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

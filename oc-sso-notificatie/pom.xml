@@ -60,6 +60,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logback.encoder.version}</version>
@@ -74,7 +80,7 @@
         <dependency>
             <groupId>co.elastic.logging</groupId>
             <artifactId>logback-ecs-encoder</artifactId>
-            <version>${ecs-logging-java.version}</version>
+            <version>${logback-ecs-encoder.version}</version>
         </dependency>
 
     </dependencies>

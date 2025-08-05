@@ -38,6 +38,9 @@ public class WebSecurityConfig {
     @Value("${management.security.roles:#{null}}")
     private String managementSecurityRoles;
 
+    @Value("${security.headers.enabled}")
+    private Boolean securityHeadersEnabled;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // This application only contains public pages. The Spring Boot Actuator Endpoints can be protected by the
@@ -48,15 +51,16 @@ public class WebSecurityConfig {
                     .anyRequest().permitAll()
             ).httpBasic(Customizer.withDefaults());
         } else {
-            http.authorizeHttpRequests(authz -> authz
-                    .anyRequest().permitAll());
+            http.authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
         }
 
         // We have to disable the X-Frame-Options since this SSO Notification service can be invoked within an iframe.
         // Disable all security headers so this service can be invoked within 3rd-party applications.
-        http.headers(headers -> headers
-                .frameOptions(Customizer.withDefaults())
-                .disable());
+        if (!securityHeadersEnabled) {
+            http.headers(headers -> headers
+                    .frameOptions(Customizer.withDefaults())
+                    .disable());
+        }
 
         return http.build();
     }
