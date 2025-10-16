@@ -41,20 +41,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.4</version>
+        <version>3.5.6</version>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <doxia-module-markdown.version>1.5</doxia-module-markdown.version>
-        <jacoco.version>0.8.10</jacoco.version>
-        <dependency-check-maven.version>12.1.3</dependency-check-maven.version>
+        <jacoco.version>0.8.13</jacoco.version>
+        <dependency-check-maven.version>12.1.6</dependency-check-maven.version>
         <logback-ecs-encoder.version>1.7.0</logback-ecs-encoder.version>
         <logback.encoder.version>7.4</logback.encoder.version>
         <maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version> <!-- Temporary fix for CVE-2025-48924 -->
     </properties>
 
     <build>
