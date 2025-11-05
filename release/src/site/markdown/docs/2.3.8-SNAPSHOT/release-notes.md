@@ -13,7 +13,7 @@
 
 | #        | Description                                                   |
 |:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| ENT-5279 | SSO notification seems to log 'SSONOT_FAILED' when successful |
 
 
 ## Configuration changes
