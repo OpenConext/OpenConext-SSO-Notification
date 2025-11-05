@@ -9,11 +9,11 @@
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
 | #        | Description                                                   |
 |:---------|:--------------------------------------------------------------|
 | ENT-5279 | SSO notification seems to log 'SSONOT_FAILED' when successful |
+| ENT-5318 | Build release OC SSO Notification 2.3.8                       |
 
 
 ## Configuration changes
