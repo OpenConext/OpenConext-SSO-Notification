@@ -3,9 +3,9 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.3.8-SNAPSHOT              |
+| Version                   | 2.3.8                       |
 | Changes since version     | 2.3.7                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 18-11-2025 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
@@ -15,8 +15,9 @@
 | ENT-5279 | SSO notification seems to log 'SSONOT_FAILED' when successful |
 | ENT-5318 | Build release OC SSO Notification 2.3.8                       |
 
-
 ## Configuration changes
+
+None.
 
 ## Known vulnerabilities
 
