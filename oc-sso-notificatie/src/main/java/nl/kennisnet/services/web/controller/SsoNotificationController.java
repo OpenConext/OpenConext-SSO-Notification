@@ -81,9 +81,11 @@ public class SsoNotificationController {
 
     private static final String SSONOT_FAILED = "SSONOT_FAILED";
 
+    private static final String SSONOT_INITIATED = "SSONOT_INITIATED";
+
     private static final String SSONOT_REDIRECT = "SSONOT_REDIRECT";
 
-    private static final String SSONOT_SUCCESS= "SSONOT_SUCCESS";
+    private static final String SSONOT_SUCCESS = "SSONOT_SUCCESS";
 
     /** The name of the SSO Cookie notification ({@value}) */
     public static final String COOKIE_NOTIFICATION = "ssonot";
@@ -128,11 +130,14 @@ public class SsoNotificationController {
                                        HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        // Add IdP id to logback and set the MDC event to INITIATE
+        MDC.put(IDP, String.valueOf(id));
+        MDC.put(EVENT, SSONOT_INITIATED);
+
         LOGGER.info("Request received with id ('{}') url ('{}') redirectUri ('{}') referrer ('{}') realm ('{}') " +
                 "notificationCookie ('{}')", id, url, redirectUri, referrer, realm, notificationCookie);
 
-        // Add IdP id to logback and set default to failed
-        MDC.put(IDP, String.valueOf(id));
+        // Set default MDC event to FAILED
         MDC.put(EVENT, SSONOT_FAILED);
 
         List<IdP> remoteSsoNotifications = idPProvider.getAllSsoNotifications();
@@ -157,7 +162,8 @@ public class SsoNotificationController {
 
         URL createdUrl = determineAndVerifyURL(idp, url, referrer);
 
-        // Set notification cookie
+        // Put the MDC event to SUCCESS and place notification cookie
+        MDC.put(EVENT, SSONOT_SUCCESS);
         LOGGER.info("Setting notification Cookie ('{}') for id ('{}') with url ('{}') and realm ('{}')",
                 COOKIE_NOTIFICATION, id, createdUrl, realm);
 
@@ -171,7 +177,6 @@ public class SsoNotificationController {
             response.sendRedirect(redirectUri);
             return;
         }
-        MDC.put(EVENT, SSONOT_SUCCESS);
         EVENT_LOGGER.info("Finished without redirecting");
     }
 
