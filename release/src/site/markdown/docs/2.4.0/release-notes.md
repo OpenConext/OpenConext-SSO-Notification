@@ -3,20 +3,21 @@
 | Field                     | Value                       |
 |:--------------------------|:----------------------------|
 | Application               | OC SSO Notification Service |
-| Version                   | 2.3.9-SNAPSHOT              |
+| Version                   | 2.4.0                       |
 | Changes since version     | 2.3.8                       |
-| Release date              | dd-mm-yyyy (dd-mm-yyyy)     |
+| Release date              | 29-01-2026 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes
-<!-- Please note only the stories should be added. -->
 
-| #        | Description                                                   |
-|:---------|:--------------------------------------------------------------|
-| ENT-XXXX |                                                               |
+| #        | Description                             |
+|:---------|:----------------------------------------|
+| ENT-5373 | Build release OC SSO Notification 2.4.0 |
 
 
 ## Configuration changes
+
+From this version on, OC SSO Notification Service requires Java 21.
 
 ## Known vulnerabilities
 
