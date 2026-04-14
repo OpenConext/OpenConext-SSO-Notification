@@ -27,12 +27,11 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class IdPProvider {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Value("${data.location}")
     private Resource dataSource;
@@ -69,8 +68,8 @@ public class IdPProvider {
     @Value("${api.endpoint.url.all-suffix:#{null}}")
     private String endpointAllSuffix;
 
-    public IdPProvider(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public IdPProvider(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -102,8 +101,11 @@ public class IdPProvider {
         URI uri = UriComponentsBuilder.fromUriString(endpointUrl + endpointAllSuffix).build().toUri();
 
         try {
-            return restTemplate.exchange(uri, HttpMethod.GET, httpEntity,
-                    new ParameterizedTypeReference<List<IdP>>(){}).getBody();
+            return restClient.get()
+                    .uri(uri)
+                    .headers(headers -> headers.addAll(httpEntity.getHeaders()))
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<List<IdP>>() {});
         } catch (HttpClientErrorException hcee) {
             if (HttpStatus.NOT_FOUND == hcee.getStatusCode()) {
                 return new ArrayList<>();

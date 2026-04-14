@@ -3,87 +3,91 @@ package nl.kennisnet.services.web;
 import nl.kennisnet.services.web.service.CacheHashService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class CacheHashServiceTest {
 
     @Mock
-    RestTemplate restTemplate;
+    RestClient restClient;
 
-    @InjectMocks
-    CacheHashService cacheHashService;
+    private CacheHashService cacheHashService;
 
     @BeforeEach
     void setUp() {
+        cacheHashService = new CacheHashService(restClient);
+
         ReflectionTestUtils.setField(cacheHashService, "url", "sso-notification-url");
         ReflectionTestUtils.setField(cacheHashService, "API_KEY_HEADER", "api-key");
     }
 
     @Test
     void fetchCacheHashTest() {
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
-                any(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity<>("HASH", HttpStatus.OK));
+        RestClient.RequestHeadersUriSpec<?> spec = buildRequestSpec("HASH");
 
-        String result = cacheHashService.fetchCacheHash();
+        when(restClient.get()).thenReturn((RestClient.RequestHeadersUriSpec) spec);
 
-        assertEquals("HASH", result);
+        assertEquals("HASH", cacheHashService.fetchCacheHash());
     }
 
     @Test
     void fetchCacheNullReturnTest() {
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
-                any(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
+        RestClient.RequestHeadersUriSpec<?> spec = buildRequestSpec(null);
 
-        String result = cacheHashService.fetchCacheHash();
+        when(restClient.get()).thenReturn((RestClient.RequestHeadersUriSpec) spec);
 
-        assertEquals("", result);
+        assertEquals("", cacheHashService.fetchCacheHash());
     }
 
     @Test
     void fetchCacheNullUrlTest() {
         ReflectionTestUtils.setField(cacheHashService, "url", null);
 
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
-                any(ParameterizedTypeReference.class))).thenReturn(new ResponseEntity<>(null, HttpStatus.OK));
-
-        String result = cacheHashService.fetchCacheHash();
-
-        assertEquals("", result);
+        assertEquals("", cacheHashService.fetchCacheHash());
     }
 
     @Test
     void fetchCacheHashHttpExceptionTest() {
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
-                any(ParameterizedTypeReference.class))).thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
+        when(restClient.get()).thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
-        String result = cacheHashService.fetchCacheHash();
-
-        assertEquals("", result);
+        assertEquals("", cacheHashService.fetchCacheHash());
     }
 
     @Test
     void fetchCacheRestClientExceptionTest() {
-        when(restTemplate.exchange(anyString(), any(HttpMethod.class), any(HttpEntity.class),
-                any(ParameterizedTypeReference.class))).thenThrow(new RestClientException("ERROR"));
+        when(restClient.get()).thenThrow(new RestClientException("ERROR"));
 
-        String result = cacheHashService.fetchCacheHash();
+        assertEquals("", cacheHashService.fetchCacheHash());
+    }
 
-        assertEquals("", result);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private RestClient.RequestHeadersUriSpec<?> buildRequestSpec(String responseBody) {
+
+        RestClient.RequestHeadersUriSpec requestSpec =
+                mock(RestClient.RequestHeadersUriSpec.class);
+
+        RestClient.RequestHeadersSpec headersSpec =
+                mock(RestClient.RequestHeadersSpec.class);
+
+        RestClient.ResponseSpec responseSpec =
+                mock(RestClient.ResponseSpec.class);
+
+        when(requestSpec.uri(anyString())).thenReturn(headersSpec);
+        when(headersSpec.headers(any())).thenReturn(headersSpec);
+        when(headersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.body(String.class)).thenReturn(responseBody);
+
+        return requestSpec;
     }
 
 }

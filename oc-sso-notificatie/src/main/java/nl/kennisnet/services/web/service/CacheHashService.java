@@ -3,15 +3,12 @@ package nl.kennisnet.services.web.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CacheHashService {
@@ -27,10 +24,10 @@ public class CacheHashService {
     @Value("${api.endpoint.url.cacheHash:#{null}}")
     private String url;
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
-    public CacheHashService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public CacheHashService(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public String fetchCacheHash() {
@@ -45,10 +42,12 @@ public class CacheHashService {
         HttpEntity<?> httpEntity = new HttpEntity<>(requestHeaders);
 
         try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity,
-                    new ParameterizedTypeReference<>() {});
+            String result = restClient.get()
+                    .uri(url)
+                    .headers(headers -> headers.addAll(httpEntity.getHeaders()))
+                    .retrieve()
+                    .body(String.class);
 
-            String result = response.getBody();
             if (null == result) {
                 LOGGER.warn("Received null from data-services cache-hash, returning empty hash");
                 return "";

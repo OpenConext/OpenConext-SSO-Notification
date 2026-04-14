@@ -17,51 +17,53 @@ package nl.kennisnet.services.web;
 
 import nl.kennisnet.services.web.model.IdP;
 import nl.kennisnet.services.web.service.IdPProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.client.RestClient;
 
-import java.net.URI;
-import java.nio.file.Files;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
+import static org.mockito.Mockito.when;
 
-@RestClientTest(IdPProvider.class)
-@TestPropertySource(properties = "classpath:application.properties")
+@ExtendWith(MockitoExtension.class)
 class IdPProviderTest {
 
-    @Autowired
-    private IdPProvider provider;
-
-    @Autowired
-    private MockRestServiceServer server;
-
-    @Value("classpath:rest_response.json")
-    private Resource resourceFile;
+    @Mock
+    private RestClient restClient;
 
     @Value("${api.endpoint.url}")
     private String endpointUrl;
 
-    @Test
-    void getIdPTest() throws Exception {
-        String resource = new String(Files.readAllBytes(resourceFile.getFile().toPath()));
-        this.server.expect(requestTo(createUrl())).andRespond(withSuccess(resource, MediaType.APPLICATION_JSON));
+    private IdPProvider idPProvider;
 
-        List<IdP> idps = provider.getAllSsoNotifications();
-        IdP idp = idps.get(0);
+    private Resource restResource;
+
+    private Resource staticResource;
+
+    @BeforeEach
+    void setUp() {
+        idPProvider = new IdPProvider(restClient);
+
+        staticResource = new ClassPathResource("idp.data.json");
+        restResource = new ClassPathResource("rest_response.json");
+
+        ReflectionTestUtils.setField(idPProvider, "dataSource", restResource);
+    }
+
+    @Test
+    void getIdPTest() {
+        List<IdP> idps = idPProvider.getAllSsoNotifications();
+        IdP idp = idps.getFirst();
         assertNotNull(idp);
         assertEquals("RefELOSAML-OpenConext", idp.getEntityId());
         assertNotNull(idp.getIdpUrlList());
@@ -75,27 +77,37 @@ class IdPProviderTest {
         assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm.openconext.org"));
         assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm2.openconext.org"));
         assertTrue(idp.getRedirectUrlList().contains("https://referentie.vm3.openconext.org"));
-        this.server.verify();
     }
 
     @Test
     void invalidApiKeyTest() {
-        this.server.expect(requestTo(createUrl())).andRespond(withUnauthorizedRequest());
-        assertThrows(HttpClientErrorException.Unauthorized.class, () -> provider.getAllSsoNotifications());
+        ReflectionTestUtils.setField(idPProvider, "endpointUrl", "http://localhost:3000/api/sso-notification");
+        ReflectionTestUtils.setField(idPProvider, "apiKeyHeaderKey", "api-key");
+        ReflectionTestUtils.setField(idPProvider, "apiKeyHeaderValue", "TESTTOKEN");
+        ReflectionTestUtils.setField(idPProvider, "endpointAllSuffix", "/all");
+
+        when(restClient.get()).thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+        assertThrows(HttpClientErrorException.class, () -> idPProvider.getAllSsoNotifications());
     }
 
     @Test
-    void notFoundResponseTest()  {
-        this.server.expect(requestTo(createUrl())).andRespond(withStatus(HttpStatus.NOT_FOUND));
-        assertTrue(provider.getAllSsoNotifications().isEmpty());
+    void notFoundResponseTest() {
+        ReflectionTestUtils.setField(idPProvider, "endpointUrl", "http://localhost:3000/api/sso-notification");
+        ReflectionTestUtils.setField(idPProvider, "apiKeyHeaderKey", "api-key");
+        ReflectionTestUtils.setField(idPProvider, "apiKeyHeaderValue", "TESTTOKEN");
+        ReflectionTestUtils.setField(idPProvider, "endpointAllSuffix", "/all");
+
+        when(restClient.get()).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+
+        assertTrue(idPProvider.getAllSsoNotifications().isEmpty());
     }
 
     @Test
     void getIdPStaticFileTest() {
-        ReflectionTestUtils.setField(provider, "endpointUrl", null);
+        ReflectionTestUtils.setField(idPProvider, "dataSource", staticResource);
 
-        List<IdP> idps = provider.getAllSsoNotifications();
-        IdP idp = idps.get(0);
+        List<IdP> idps = idPProvider.getAllSsoNotifications();
+        IdP idp = idps.getFirst();
         assertNotNull(idp);
         assertEquals("xxx", idp.getEntityId());
         assertNotNull(idp.getIdpUrlList());
@@ -109,14 +121,9 @@ class IdPProviderTest {
 
     @Test
     void getIdpInvalidResourceStaticFileTest() {
-        ReflectionTestUtils.setField(provider, "dataSource", new ClassPathResource("file_does_not_exist"));
-        List<IdP> idps = provider.getAllSsoNotifications();
+        ReflectionTestUtils.setField(idPProvider, "dataSource", new ClassPathResource("file_does_not_exist"));
+        List<IdP> idps = idPProvider.getAllSsoNotifications();
         assertTrue(idps.isEmpty());
-    }
-
-    private URI createUrl() {
-        String ALL_SUFFIX = "/all";
-        return UriComponentsBuilder.fromUriString(endpointUrl + ALL_SUFFIX).build().toUri();
     }
 
 }

@@ -24,9 +24,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,27 +39,33 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class SsoNotificationControllerTest {
 
     private static final String SINGLE_URL = "singleUrl";
+
     private static final String SINGLE_URL_WITH_PATH = "singleUrlWithPath";
+
     private static final String INVALID = "invalid";
 
     private static final String MULTIPLE_URLS = "multipleUrls";
+
     private static final String NO_PATH_URL_IDP = "noIdpUrlConfigured";
+
     private static final String NO_PATH_URL_REDIRECT = "noRedirectUrlConfigured";
 
     private static final String SINGLE_WILDCARD_URL = "singleWildcardUrl";
 
     private static final String SSO_NOTIFICATION_URL = "/";
+
     private static final String URL = "url";
+
     private static final String REDIRECT_URI = "redirectUri";
+
     private MockMvc mvc;
 
     @InjectMocks
-    private SsoNotificationController controller;
+    private SsoNotificationController ssoNotificationController;
 
     @Mock
     private CacheConfig cacheConfig;
@@ -72,8 +77,8 @@ class SsoNotificationControllerTest {
     private IdPProvider idPProvider;
 
     @BeforeEach
-    void setUp() throws Exception {
-        this.mvc = MockMvcBuilders.standaloneSetup(controller).build();
+    void setUp() {
+        this.mvc = MockMvcBuilders.standaloneSetup(ssoNotificationController).build();
 
         ArrayList<IdP> ssoNotifications = new ArrayList<>();
         ssoNotifications.add(new IdP(NO_PATH_URL_IDP, null, List.of("http://www.example.com")));
@@ -90,8 +95,6 @@ class SsoNotificationControllerTest {
                 List.of("http://www.example.com")));
 
         when(idPProvider.getAllSsoNotifications()).thenReturn(ssoNotifications);
-        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
-                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
     }
 
     @Test
@@ -148,6 +151,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void processSsoNotificationNoRedirectUrlParamTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL)
                 .param(URL, "http://www.example.com"))
                 .andExpect(status().isOk())
@@ -156,6 +162,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void processSsoNotificationRedirectTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", "multipleUrls")
                 .param(URL, "http://www.example.com")
                 .param(REDIRECT_URI, "http://www.exampledomain.com"))
@@ -166,6 +175,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void processSsoNotificationFromIframeTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", "multipleUrls")
                 .param(URL, "http://www.example.com"))
                 .andExpect(status().isOk())
@@ -174,6 +186,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void processSsoNotificationFromIframeWithRedirectTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", "multipleUrls")
                 .param(REDIRECT_URI, "http://www.example.com")
                 .param(URL, "http://www.example.com"))
@@ -184,6 +199,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void processSsoNotificationFromIframeWildcardTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_WILDCARD_URL)
                 .param(URL, "http://test.example.com"))
                 .andExpect(cookie().exists(SsoNotificationController.COOKIE_NOTIFICATION))
@@ -229,6 +247,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void testUrlPathTest() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL_WITH_PATH)
                 .header(HttpHeaders.REFERER, "http://www.example.com"))
                 .andExpect(status().isOk())
@@ -258,6 +279,9 @@ class SsoNotificationControllerTest {
 
     @Test
     void testDataFetchError() throws Exception {
+        when(cookiesHandler.createCookie(anyString(), nullable(String.class), any(URL.class), any())).thenReturn(
+                new Cookie(SsoNotificationController.COOKIE_NOTIFICATION, "testValue"));
+
         mvc.perform(MockMvcRequestBuilders.get(SSO_NOTIFICATION_URL).param("id", SINGLE_URL_WITH_PATH)
                 .param(REDIRECT_URI, "http://www.example.com")
                 .header(HttpHeaders.REFERER, "http://www.example.com"));
