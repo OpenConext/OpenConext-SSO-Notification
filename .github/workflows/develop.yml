@@ -31,6 +31,8 @@ jobs:
            exit 1
          fi
       - name: Build with Maven
+        env:
+          SOURCE_DATE_EPOCH: ""
         run: mvn -B -U clean verify install -P release -Djdk.net.URLClassPath.disableClassPathURLCheck=true
       - run: echo "ARTIFACT_FILE_NAME=$(ls oc-sso-notificatie/target/*.jar | xargs basename | sed 's/\.[^.]*$//')" >> $GITHUB_ENV
       - run: echo "ARTIFACT_PATH=$(ls oc-sso-notificatie/target/*.jar)" >> $GITHUB_ENV
