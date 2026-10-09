@@ -37,7 +37,6 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SOURCE_DATE_EPOCH: ""
       - run: echo "ARTIFACT_JAR_FILE=$(ls oc-sso-notificatie/target/*.jar | xargs basename)" >> $GITHUB_ENV
       - run: echo "ARTIFACT_FILE_NAME=$(ls oc-sso-notificatie/target/*.jar | xargs basename | sed 's/\.[^.]*$//')" >> $GITHUB_ENV
       - run: echo "ARTIFACT_PATH=$(ls oc-sso-notificatie/target/*.jar)" >> $GITHUB_ENV
