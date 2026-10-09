@@ -17,7 +17,7 @@ The following urls are exposed with this service:
 
 The OC SSO Notification Service utilises:
 
-- Java 21
+- Java 25
 - Maven 3+
 
 ## Installation
