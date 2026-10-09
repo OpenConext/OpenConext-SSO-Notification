@@ -5,7 +5,7 @@
 | Application               | OC SSO Notification Service |
 | Version                   | 2.6.0                       |
 | Changes since version     | 2.5.1                       |
-| Release date              | 08-10-2026 (dd-mm-yyyy)     |
+| Release date              | 09-10-2026 (dd-mm-yyyy)     |
 | Delivery type             | Full release                |
 
 ## Changes

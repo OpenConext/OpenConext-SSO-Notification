@@ -30,12 +30,6 @@ jobs:
            echo "Version does not contain SNAPSHOT, failing the workflow!"
            exit 1
          fi
-      - name: Debug Maven timestamp
-        run: |
-          echo "MAVEN_ARGS=$MAVEN_ARGS"
-          echo "MAVEN_OPTS=$MAVEN_OPTS"
-          echo "SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH"
-          mvn help:evaluate -Dexpression=project.build.outputTimestamp -q -DforceStdout
       - name: Build with Maven
         run: mvn -B -U clean verify install -P release -Djdk.net.URLClassPath.disableClassPathURLCheck=true
       - run: echo "ARTIFACT_FILE_NAME=$(ls oc-sso-notificatie/target/*.jar | xargs basename | sed 's/\.[^.]*$//')" >> $GITHUB_ENV
